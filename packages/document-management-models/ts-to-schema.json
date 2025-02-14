@@ -1,0 +1,8 @@
+{
+	"baseUrl": "https://schema.twindev.org/documents/",
+	"sources": ["./src/models/**/*.ts"],
+	"types": ["IDocument"],
+	"externalReferences": {
+		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
+	}
+}
