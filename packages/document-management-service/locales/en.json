@@ -1,0 +1,10 @@
+{
+	"error": {
+		"documentManagementService": {
+			"setFailed": "Failed to set document",
+			"invalidDocumentId": "The document id not in the correct format, it is \"{identifier}\"",
+			"invalidDocumentCode": "The document code does not follow the format unece:DocumentCodeList#1, it is \"{documentCode}\"",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Document Management component \"{namespace}\""
+		}
+	}
+}

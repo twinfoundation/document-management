@@ -6,7 +6,7 @@ Interface describing a document.
 
 ### @context
 
-> **@context**: `"https://schema.twindev.org/documents/"` \| \[`"https://schema.twindev.org/documents/"`, `...IJsonLdContextDefinitionElement[]`\]
+> **@context**: \[`"https://schema.twindev.org/documents/"`, `"https://schema.twindev.org/common/"`, `"https://schema.org"`, `...IJsonLdContextDefinitionElement[]`\]
 
 JSON-LD Context.
 
@@ -44,11 +44,11 @@ The code for the document type.
 
 ***
 
-### documentRevision?
+### documentRevision
 
-> `optional` **documentRevision**: `number`
+> **documentRevision**: `number`
 
-The revision of the document.
+The revision of the document as a 0 based index.
 
 ***
 
@@ -68,6 +68,22 @@ The blob storage id for the document.
 
 ***
 
+### blobHash
+
+> **blobHash**: `string`
+
+The hash of the blob data.
+
+***
+
+### blobStorageEntry?
+
+> `optional` **blobStorageEntry**: `IBlobStorageEntry`
+
+The additional JSON-LD for blob storage if it was requested.
+
+***
+
 ### attestationId?
 
 > `optional` **attestationId**: `string`
@@ -76,11 +92,19 @@ The attestation for the document if one was created.
 
 ***
 
+### attestationInformation?
+
+> `optional` **attestationInformation**: `IAttestationInformation`
+
+The additional JSON-LD for attestation storage if it was requested.
+
+***
+
 ### dateCreated
 
 > **dateCreated**: `string`
 
-The date/time of when the element was created.
+The date/time of when the document was created.
 
 ***
 
@@ -88,7 +112,7 @@ The date/time of when the element was created.
 
 > `optional` **dateModified**: `string`
 
-The date/time of when the element was modified.
+The date/time of when the document was modified.
 
 ***
 
@@ -96,4 +120,4 @@ The date/time of when the element was modified.
 
 > `optional` **dateDeleted**: `string`
 
-The date/time of when the element was deleted, as we never actually remove items.
+The date/time of when the document was deleted, as we never actually remove items.

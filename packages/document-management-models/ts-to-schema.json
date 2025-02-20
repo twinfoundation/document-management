@@ -1,8 +1,11 @@
 {
 	"baseUrl": "https://schema.twindev.org/documents/",
 	"sources": ["./src/models/**/*.ts"],
-	"types": ["IDocument"],
+	"types": ["IDocument", "IDocumentList"],
 	"externalReferences": {
-		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
+		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1",
+		"IAttestation(.*)": "https://schema.twindev.org/attestation/Attestation$1",
+		"IBlob(.*)": "https://schema.twindev.org/blob-storage/Blob$1",
+		"UneceDocumentCodes": "https://vocabulary.uncefact.org/DocumentCodeList"
 	}
 }

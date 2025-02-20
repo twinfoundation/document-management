@@ -39,7 +39,8 @@
 		"prettier": "3.5.0"
 	},
 	"workspaces": [
-		"packages/document-management-models"
+		"packages/document-management-models",
+		"packages/document-management-service"
 	],
 	"type": "module"
 }

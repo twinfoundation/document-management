@@ -36,6 +36,7 @@
 		"@twin.org/blob-storage-models": "next",
 		"@twin.org/core": "next",
 		"@twin.org/data-json-ld": "next",
+		"@twin.org/standards-schema-org": "next",
 		"@twin.org/standards-unece": "next",
 		"@twin.org/nameof": "next"
 	},

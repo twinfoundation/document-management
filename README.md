@@ -4,7 +4,8 @@ This mono-repository contains the packages to use with Document Management in TW
 
 ## Packages
 
-- [document-management-models](packages/document-management-models/README.md) - Models which define the structure of the document-management contracts and connectors.
+- [document-management-models](packages/document-management-models/README.md) - Models which define the structure of the document management contracts and connectors.
+- [document-management-service](packages/document-management-service/README.md) - Document management contract implementation and REST endpoint definitions.
 
 ## Contributing
 

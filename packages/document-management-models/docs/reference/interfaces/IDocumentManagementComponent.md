@@ -8,11 +8,13 @@ Interface describing an document management contract.
 
 ## Methods
 
-### create()
+### set()
 
-> **create**(`auditableItemGraphId`, `documentId`, `documentIdFormat`, `documentCode`, `data`, `annotationObject`, `createAttestation`): `Promise`\<`string`\>
+> **set**(`auditableItemGraphId`, `documentId`, `documentIdFormat`, `documentCode`, `blob`, `annotationObject`?, `createAttestation`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
 
-Add a new document to an auditable item graph vertex and add its content to blob storage.
+Store a document in an auditable item graph vertex and add its content to blob storage.
+If the document id already exists and the blob data is different a new revision will be created.
+For any other changes the current revision will be updated.
 
 #### Parameters
 
@@ -40,23 +42,35 @@ The format of the document identifier.
 
 The code for the document type.
 
-##### data
+##### blob
 
 `Uint8Array`
 
 The data to create the document with.
 
-##### annotationObject
+##### annotationObject?
+
+`IJsonLdNodeObject`
 
 Additional information to associate with the document.
 
-`undefined` | `IJsonLdNodeObject`
-
-##### createAttestation
+##### createAttestation?
 
 `boolean`
 
-Flag to create an attestation for the document.
+Flag to create an attestation for the document, defaults to false.
+
+##### userIdentity?
+
+`string`
+
+The identity to perform the auditable item graph operation with.
+
+##### nodeIdentity?
+
+`string`
+
+The node identity to use for vault operations.
 
 #### Returns
 
@@ -68,7 +82,7 @@ The identifier for the document which includes the auditable item graph identifi
 
 ### get()
 
-> **get**(`identifier`, `includeRevisions`?, `includeRemoved`?): `Promise`\<[`IDocument`](IDocument.md)[]\>
+> **get**(`identifier`, `options`?, `revisionCursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IDocumentList`](IDocumentList.md)\>
 
 Get a specific document from an auditable item graph vertex.
 
@@ -80,31 +94,66 @@ Get a specific document from an auditable item graph vertex.
 
 The identifier of the document to get.
 
-##### includeRevisions?
+##### options?
+
+Additional options for the get operation.
+
+###### includeBlobStorageMetadata?
 
 `boolean`
 
-Flag to include the revisions of the document.
+Flag to include the blob storage metadata for the document.
 
-##### includeRemoved?
+###### includeBlobStorageData?
 
 `boolean`
 
-Flag to include any removed documents, dateDeleted will be set for these documents.
+Flag to include the blob storage data for the document.
+
+###### includeAttestation?
+
+`boolean`
+
+Flag to include the attestation information for the document.
+
+###### maxRevisionCount?
+
+`number`
+
+Max number of revisions to return, defaults to 0.
+
+##### revisionCursor?
+
+`string`
+
+The cursor to get the next chunk of revisions.
+
+##### userIdentity?
+
+`string`
+
+The identity to perform the auditable item graph operation with.
+
+##### nodeIdentity?
+
+`string`
+
+The node identity to use for vault operations.
 
 #### Returns
 
-`Promise`\<[`IDocument`](IDocument.md)[]\>
+`Promise`\<[`IDocumentList`](IDocumentList.md)\>
 
-The documents and revisions if requested.
+The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
 
 ***
 
 ### remove()
 
-> **remove**(`identifier`): `Promise`\<`void`\>
+> **remove**(`identifier`, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
 Remove a specific document from an auditable item graph vertex.
+The documents dateDeleted will be set, but can still be queried with the includeRemoved flag.
 
 #### Parameters
 
@@ -113,6 +162,18 @@ Remove a specific document from an auditable item graph vertex.
 `string`
 
 The identifier of the document to remove.
+
+##### userIdentity?
+
+`string`
+
+The identity to perform the auditable item graph operation with.
+
+##### nodeIdentity?
+
+`string`
+
+The node identity to use for vault operations.
 
 #### Returns
 
@@ -124,7 +185,7 @@ Nothing.
 
 ### query()
 
-> **query**(`auditableItemGraphId`, `documentCodes`?, `includeRevisions`?, `includeRemoved`?): `Promise`\<[`IDocument`](IDocument.md)[]\>
+> **query**(`auditableItemGraphId`, `documentCodes`?, `cursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IDocumentList`](IDocumentList.md)\>
 
 Query an auditable item graph vertex for documents.
 
@@ -140,22 +201,28 @@ The auditable item graph vertex to get the documents from.
 
 `string`[]
 
-The document codes to filter by.
+The document codes to query for, if undefined gets all document codes.
 
-##### includeRevisions?
+##### cursor?
 
-`boolean`
+`string`
 
-Flag to include the revisions of the document.
+The cursor to get the next chunk of documents.
 
-##### includeRemoved?
+##### userIdentity?
 
-`boolean`
+`string`
 
-Flag to include any removed documents, dateDeleted will be set for these documents.
+The identity to perform the auditable item graph operation with.
+
+##### nodeIdentity?
+
+`string`
+
+The node identity to use for vault operations.
 
 #### Returns
 
-`Promise`\<[`IDocument`](IDocument.md)[]\>
+`Promise`\<[`IDocumentList`](IDocumentList.md)\>
 
-The documents and revisions if requested.
+The most recent revisions of each document, cursor is set if there are more documents.
