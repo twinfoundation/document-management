@@ -22,11 +22,17 @@ The headers which can be used to determine the response data type.
 
 The path parameters.
 
-#### id
+#### auditableItemGraphId
 
-> **id**: `string`
+> **auditableItemGraphId**: `string`
 
-The id of the document to get which includes the auditable item graph vertex.
+The id of the auditable item graph vertex to store the document on.
+
+#### documentId
+
+> **documentId**: `string`
+
+The full id of the document to get.
 
 ***
 
@@ -65,6 +71,18 @@ false
 > `optional` **includeAttestation**: `boolean`
 
 Include the attestation information in the response.
+
+##### Default
+
+```ts
+false
+```
+
+#### includeRemoved?
+
+> `optional` **includeRemoved**: `boolean`
+
+Include deleted documents in the response.
 
 ##### Default
 

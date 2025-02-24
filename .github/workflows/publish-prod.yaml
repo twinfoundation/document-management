@@ -10,6 +10,7 @@ on:
         options:
           - 'packages/document-management-models'
           - 'packages/document-management-service'
+          - 'packages/document-management-rest-client'
 
 jobs:
   publish:

@@ -18,9 +18,14 @@ export interface IDocumentManagementGetRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the document to get which includes the auditable item graph vertex.
+		 * The id of the auditable item graph vertex to store the document on.
 		 */
-		id: string;
+		auditableItemGraphId: string;
+
+		/**
+		 * The full id of the document to get.
+		 */
+		documentId: string;
 	};
 
 	/**
@@ -43,8 +48,13 @@ export interface IDocumentManagementGetRequest {
 		 * Include the attestation information in the response.
 		 * @default false
 		 */
-
 		includeAttestation?: boolean;
+
+		/**
+		 * Include deleted documents in the response.
+		 * @default false
+		 */
+		includeRemoved?: boolean;
 
 		/**
 		 * Max number of revisions to return.

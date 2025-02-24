@@ -1,22 +1,25 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAttestationComponent } from "@twin.org/attestation-models";
+import { AttestationTypes } from "@twin.org/attestation-models";
 import {
 	AuditableItemGraphTypes,
 	type IAuditableItemGraphComponent,
 	type IAuditableItemGraphVertex
 } from "@twin.org/auditable-item-graph-models";
 import type { IBlobStorageComponent } from "@twin.org/blob-storage-models";
+import { BlobStorageTypes } from "@twin.org/blob-storage-models";
 import {
 	BaseError,
+	Coerce,
 	ComponentFactory,
 	Converter,
 	GeneralError,
 	Guards,
 	Is,
+	NotFoundError,
 	ObjectHelper,
-	Urn,
-	type NotFoundError
+	Urn
 } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
 import { JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
@@ -39,6 +42,12 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * The namespace supported by the document management service.
 	 */
 	public static readonly NAMESPACE: string = "documents";
+
+	/**
+	 * Default Page Size for cursor.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_PAGE_SIZE: number = 20;
 
 	/**
 	 * Runtime name for the class.
@@ -126,28 +135,27 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			const vertexDocs = this.filterDocumentsFromVertex(vertex);
 
 			// Reduce the list to those with a matching id and code
-			const matchingDocIds = this.findMatchingDocs(vertexDocs, documentId, documentCode);
+			const matchingDocIds = this.findMatchingDocs(vertexDocs, documentId, documentCode, true);
 
 			// Calculate the hash for the blob.
 			const blobHash = this.generateBlobHash(blob);
 
-			const matchingDocHash = matchingDocIds.find(d => d.blobHash === blobHash);
-
 			let documentRevision;
 
-			if (Is.object(matchingDocHash)) {
-				documentRevision = matchingDocHash.documentRevision;
+			if (Is.arrayValue(matchingDocIds) && matchingDocIds[0].blobHash === blobHash) {
+				documentRevision = matchingDocIds[0].documentRevision;
 
 				// If there is already a doc with the matching blob hash no need to create a new revision
 				// instead we just update the annotation object if it has changed.
-				if (!ObjectHelper.equal(matchingDocHash.annotationObject, annotationObject, false)) {
-					matchingDocHash.dateModified = new Date().toISOString();
-					matchingDocHash.annotationObject = annotationObject;
+				if (!ObjectHelper.equal(matchingDocIds[0].annotationObject, annotationObject, false)) {
+					matchingDocIds[0].dateModified = new Date().toISOString();
+					matchingDocIds[0].annotationObject = annotationObject;
 					await this._auditableItemGraphComponent.update(vertex, userIdentity, nodeIdentity);
 				}
 
-				return matchingDocHash.id;
+				return matchingDocIds[0].id;
 			}
+
 			// Nothing matches the current blob hash so upload it to blob storage
 			const blobStorageId = await this._blobStorageComponent.create(
 				Converter.bytesToBase64(blob),
@@ -170,7 +178,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 					SchemaOrgTypes.ContextRoot
 				],
 				type: DocumentTypes.Document,
-				id: documentId,
+				id: this.createIdentifier(documentCode, documentId, documentRevision),
+				documentId,
 				documentIdFormat,
 				documentCode,
 				documentRevision,
@@ -201,12 +210,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			});
 			await this._auditableItemGraphComponent.update(vertex, userIdentity, nodeIdentity);
 
-			return this.createIdentifier(
-				auditableItemGraphId,
-				document.documentCode,
-				document.id,
-				document.documentRevision
-			);
+			return document.id;
 		} catch (error) {
 			if (BaseError.someErrorName(error, nameof<NotFoundError>())) {
 				throw error;
@@ -217,11 +221,13 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 
 	/**
 	 * Get a specific document from an auditable item graph vertex.
+	 * @param auditableItemGraphId The auditable item graph vertex id to get the document from.
 	 * @param identifier The identifier of the document to get.
 	 * @param options Additional options for the get operation.
-	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document.
-	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document.
-	 * @param options.includeAttestation Flag to include the attestation information for the document.
+	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
+	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
+	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
+	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
 	 * @param options.maxRevisionCount Max number of revisions to return, defaults to 0.
 	 * @param revisionCursor The cursor to get the next chunk of revisions.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
@@ -229,25 +235,33 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @returns The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
 	 */
 	public async get(
+		auditableItemGraphId: string,
 		identifier: string,
 		options?: {
 			includeBlobStorageMetadata?: boolean;
 			includeBlobStorageData?: boolean;
 			includeAttestation?: boolean;
+			includeRemoved?: boolean;
 			maxRevisionCount?: number;
 		},
 		revisionCursor?: string,
 		userIdentity?: string,
 		nodeIdentity?: string
-	): Promise<IDocumentList> {
+	): Promise<IDocument> {
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
 		Urn.guard(this.CLASS_NAME, nameof(identifier), identifier);
 
 		try {
+			const includeBlobStorageMetadata = options?.includeBlobStorageMetadata ?? false;
+			const includeBlobStorageData = options?.includeBlobStorageData ?? false;
+			const includeAttestation = options?.includeAttestation ?? false;
+			const includeRemoved = options?.includeRemoved ?? false;
+			const revCursor = Math.max(Coerce.integer(revisionCursor) ?? 0, 0);
+			const maxRevisionCount = Math.max(Coerce.integer(options?.maxRevisionCount) ?? 0);
+
 			const documentIdParts = this.parseDocumentId(identifier);
 
-			const vertex = await this._auditableItemGraphComponent.get(
-				documentIdParts.auditableItemGraphId
-			);
+			const vertex = await this._auditableItemGraphComponent.get(auditableItemGraphId);
 
 			// Get all the docs from the AIG vertex
 			const vertexDocs = this.filterDocumentsFromVertex(vertex);
@@ -256,40 +270,27 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			const matchingDocIds = this.findMatchingDocs(
 				vertexDocs,
 				documentIdParts.documentId,
-				documentIdParts.documentCode
+				documentIdParts.documentCode,
+				includeRemoved
 			);
 
-			const includeBlobStorageMetadata = options?.includeBlobStorageMetadata ?? false;
-			const includeBlobStorageData = options?.includeBlobStorageData ?? false;
-			if (includeBlobStorageMetadata || includeBlobStorageData) {
-				const blobEntry = await this._blobStorageComponent.get(
-					matchingDocIds[0].blobStorageId,
+			// Populate the document and revisions with the options set
+			const document = await this.getDocumentAndRevisions(
+				matchingDocIds,
+				identifier,
+				{
+					includeBlobStorageMetadata,
 					includeBlobStorageData,
-					userIdentity,
-					nodeIdentity
-				);
-				matchingDocIds[0].blobStorageEntry = blobEntry;
-			}
+					includeAttestation,
+					includeRemoved,
+					maxRevisionCount
+				},
+				revCursor,
+				userIdentity,
+				nodeIdentity
+			);
 
-			const includeAttestation = options?.includeAttestation ?? false;
-			if (includeAttestation && Is.stringValue(matchingDocIds[0].attestationId)) {
-				const attestationInformation = await this._attestationComponent.get(
-					matchingDocIds[0].attestationId
-				);
-				matchingDocIds[0].attestationInformation = attestationInformation;
-			}
-
-			const docList: IDocumentList = {
-				"@context": [
-					DocumentTypes.ContextRoot,
-					DocumentTypes.ContextRootCommon,
-					SchemaOrgTypes.ContextRoot
-				],
-				type: DocumentTypes.DocumentList,
-				documents: matchingDocIds
-			};
-
-			return JsonLdProcessor.compact(docList);
+			return JsonLdProcessor.compact(document, document["@context"]);
 		} catch (error) {
 			if (BaseError.someErrorName(error, nameof<NotFoundError>())) {
 				throw error;
@@ -301,21 +302,74 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	/**
 	 * Remove a specific document from an auditable item graph vertex.
 	 * The documents dateDeleted will be set, but can still be queried with the includeRemoved flag.
+	 * @param auditableItemGraphId The auditable item graph vertex id to remove the document from.
 	 * @param identifier The identifier of the document to remove.
+	 * @param options Additional options for the remove operation.
+	 * @param options.removeAllRevisions Flag to remove all revisions of the document, defaults to false.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
 	 * @param nodeIdentity The node identity to use for vault operations.
 	 * @returns Nothing.
 	 */
 	public async remove(
+		auditableItemGraphId: string,
 		identifier: string,
+		options?: { removeAllRevisions?: boolean },
 		userIdentity?: string,
 		nodeIdentity?: string
-	): Promise<void> {}
+	): Promise<void> {
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
+		Urn.guard(this.CLASS_NAME, nameof(identifier), identifier);
+
+		try {
+			const documentIdParts = this.parseDocumentId(identifier);
+
+			const vertex = await this._auditableItemGraphComponent.get(auditableItemGraphId);
+
+			// Get all the docs from the AIG vertex
+			const vertexDocs = this.filterDocumentsFromVertex(vertex);
+
+			// Reduce the list to those with a matching id and code
+			const matchingDocIds = this.findMatchingDocs(
+				vertexDocs,
+				documentIdParts.documentId,
+				documentIdParts.documentCode,
+				false
+			);
+
+			const removeAllRevisions = options?.removeAllRevisions ?? false;
+
+			const now = Date.now();
+			if (removeAllRevisions) {
+				for (const doc of matchingDocIds) {
+					doc.dateDeleted = new Date(now).toISOString();
+				}
+			} else {
+				const matchingRevision = matchingDocIds.find(
+					d => d.documentRevision === documentIdParts.documentRevision
+				);
+				if (matchingRevision) {
+					matchingRevision.dateDeleted = new Date(now).toISOString();
+				} else {
+					throw new NotFoundError(this.CLASS_NAME, "documentRevisionNotFound", identifier);
+				}
+			}
+
+			await this._auditableItemGraphComponent.update(vertex, userIdentity, nodeIdentity);
+		} catch (error) {
+			if (BaseError.someErrorName(error, nameof<NotFoundError>())) {
+				throw error;
+			}
+			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
+		}
+	}
 
 	/**
 	 * Query an auditable item graph vertex for documents.
 	 * @param auditableItemGraphId The auditable item graph vertex to get the documents from.
 	 * @param documentCodes The document codes to query for, if undefined gets all document codes.
+	 * @param options Additional options for the query operation.
+	 * @param options.includeMostRecentRevisions Include the most recent 5 revisions, use the individual get to retrieve more.
+	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
 	 * @param cursor The cursor to get the next chunk of documents.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
 	 * @param nodeIdentity The node identity to use for vault operations.
@@ -324,16 +378,125 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	public async query(
 		auditableItemGraphId: string,
 		documentCodes?: UneceDocumentCodes[],
+		options?: {
+			includeMostRecentRevisions?: boolean;
+			includeRemoved?: boolean;
+		},
 		cursor?: string,
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<IDocumentList> {
-		return {} as IDocumentList;
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
+
+		try {
+			const includeRemoved = options?.includeRemoved ?? false;
+			const includeMostRecentRevisions = options?.includeMostRecentRevisions ?? false;
+			const docCursor = Math.max(Coerce.integer(cursor) ?? 0, 0);
+
+			const vertex = await this._auditableItemGraphComponent.get(auditableItemGraphId);
+
+			// Get all the docs from the AIG vertex
+			const vertexDocs = this.filterDocumentsFromVertex(vertex);
+
+			let matchingDocIds = vertexDocs;
+			if (Is.arrayValue(documentCodes)) {
+				matchingDocIds = vertexDocs.filter(d => documentCodes.includes(d.documentCode));
+			}
+
+			const documentIdGroups: { [key: string]: (IDocument & IJsonLdNodeObject)[] } = {};
+			let docGroupIds: string[] = [];
+
+			for (const doc of matchingDocIds) {
+				const docId = `${doc.documentId}:${doc.documentCode}`;
+				if (!docGroupIds.includes(docId)) {
+					docGroupIds.push(docId);
+				}
+				documentIdGroups[docId] ??= [];
+				documentIdGroups[docId].push(doc);
+			}
+
+			let nextDocCursor;
+			if (docGroupIds.length > docCursor + DocumentManagementService._DEFAULT_PAGE_SIZE) {
+				nextDocCursor = (docCursor + DocumentManagementService._DEFAULT_PAGE_SIZE).toString();
+			}
+
+			docGroupIds = docGroupIds.slice(
+				docCursor,
+				docCursor + DocumentManagementService._DEFAULT_PAGE_SIZE
+			);
+
+			const finalDocs: (IDocument & IJsonLdNodeObject)[] = [];
+			for (const docId of docGroupIds) {
+				finalDocs.push(
+					await this.getDocumentAndRevisions(
+						documentIdGroups[docId],
+						docId,
+						{
+							includeAttestation: false,
+							includeBlobStorageData: false,
+							includeBlobStorageMetadata: false,
+							includeRemoved,
+							maxRevisionCount: includeMostRecentRevisions ? 5 : 0
+						},
+						0,
+						userIdentity,
+						nodeIdentity
+					)
+				);
+			}
+
+			const docList: IDocumentList = {
+				"@context": [
+					DocumentTypes.ContextRoot,
+					DocumentTypes.ContextRootCommon,
+					SchemaOrgTypes.ContextRoot
+				],
+				type: DocumentTypes.DocumentList,
+				documents: finalDocs,
+				cursor: nextDocCursor
+			};
+
+			return JsonLdProcessor.compact(docList, docList["@context"]);
+		} catch (error) {
+			if (BaseError.someErrorName(error, nameof<NotFoundError>())) {
+				throw error;
+			}
+			throw new GeneralError(this.CLASS_NAME, "queryFailed", undefined, error);
+		}
+	}
+
+	/**
+	 * Encode the document id.
+	 * @param documentId The document identifier.
+	 * @returns The encoded identifier.
+	 * @internal
+	 */
+	private encodeDocumentIdentifier(documentId: string, documentRevision: number): string {
+		return `${documentId}:rev-${documentRevision}`;
+	}
+
+	/**
+	 * Decode the document id.
+	 * @param documentId The document identifier.
+	 * @returns The decoded identifier.
+	 * @internal
+	 */
+	private decodeDocumentIdentifier(documentId: string): {
+		documentId: string;
+		documentRevision?: number;
+	} {
+		const parts = documentId.split(":");
+		const lastPart = parts[parts.length - 1];
+		let revision;
+		if (lastPart.startsWith("rev-")) {
+			revision = Number.parseInt(lastPart.slice(4), 10);
+			parts.pop();
+		}
+		return { documentId: parts.join(":"), documentRevision: revision };
 	}
 
 	/**
 	 * Create a full identifier for a document.
-	 * @param auditableItemGraphId The auditable item graph identifier.
 	 * @param documentCode The document code.
 	 * @param documentId The document identifier.
 	 * @param documentRevision The document revision.
@@ -341,13 +504,12 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @internal
 	 */
 	private createIdentifier(
-		auditableItemGraphId: string,
 		documentCode: UneceDocumentCodes,
 		documentId: string,
 		documentRevision: number
 	): string {
 		const docCode = this.parseDocumentCode(documentCode);
-		return `${auditableItemGraphId}:${docCode}:${documentId}:${documentRevision}`;
+		return `documents:${docCode}:${this.encodeDocumentIdentifier(documentId, documentRevision)}`;
 	}
 
 	/**
@@ -357,25 +519,23 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @internal
 	 */
 	private parseDocumentId(identifier: string): {
-		auditableItemGraphId: string;
 		documentCode: UneceDocumentCodes;
 		documentId: string;
 		documentRevision?: number;
 	} {
 		const urn = Urn.fromValidString(identifier);
-		const auditableItemGraphId = `${urn.namespaceIdentifier()}:${urn.namespaceMethod()}`;
 		const remainingParts = urn.namespaceSpecificParts();
 
-		if (remainingParts.length < 3) {
+		if (remainingParts.length < 2) {
 			throw new GeneralError(this.CLASS_NAME, "invalidDocumentId", { identifier });
 		}
 
-		const documentCode = `unece:DocumentCodeList#${remainingParts[1]}`;
-		const documentId = remainingParts[2];
-		const documentRevision =
-			remainingParts.length === 4 ? Number.parseInt(remainingParts[3], 10) : undefined;
+		const documentCode = `unece:DocumentCodeList#${remainingParts[0]}`;
+		const { documentId, documentRevision } = this.decodeDocumentIdentifier(
+			urn.namespaceSpecific(1)
+		);
 
-		return { auditableItemGraphId, documentCode, documentId, documentRevision };
+		return { documentCode, documentId, documentRevision };
 	}
 
 	/**
@@ -424,19 +584,22 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @param documents The documents to search.
 	 * @param documentId The document id.
 	 * @param documentCode The document code.
+	 * @param includeRemoved Include deleted documents.
 	 * @returns The matching documents.
 	 * @internal
 	 */
 	private findMatchingDocs(
 		documents: (IDocument & IJsonLdNodeObject)[],
 		documentId: string,
-		documentCode: string
+		documentCode: string,
+		includeRemoved: boolean
 	): (IDocument & IJsonLdNodeObject)[] {
 		return documents
 			.filter(
 				d =>
-					ObjectHelper.extractProperty(d, ["@id", "id"], false) === documentId &&
-					d.documentCode === documentCode
+					d.documentId === documentId &&
+					d.documentCode === documentCode &&
+					(includeRemoved || Is.empty(d.dateDeleted))
 			)
 			.sort((a, b) => b.documentRevision - a.documentRevision);
 	}
@@ -449,5 +612,74 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 */
 	private generateBlobHash(blob: Uint8Array): string {
 		return `sha256:${Converter.bytesToBase64(Sha256.sum256(blob))}`;
+	}
+
+	/**
+	 * Get the documents from the auditable item graph vertex.
+	 * @param matchingDocIds The documents which match document type and id.
+	 * @param identifier The full document identifier.
+	 * @param options Additional options for the get operation.
+	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
+	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
+	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
+	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
+	 * @param options.maxRevisionCount Max number of revisions to return, defaults to 0.
+	 * @param revisionCursor The cursor to get the next chunk of revisions.
+	 * @param userIdentity The identity to perform the auditable item graph operation with.
+	 * @param nodeIdentity The node identity to use for vault operations.
+	 * @returns The finalised list of documents.
+	 * @internal
+	 */
+	private async getDocumentAndRevisions(
+		matchingDocIds: (IDocument & IJsonLdNodeObject)[],
+		identifier: string,
+		options: {
+			includeBlobStorageMetadata: boolean;
+			includeBlobStorageData: boolean;
+			includeAttestation: boolean;
+			includeRemoved: boolean;
+			maxRevisionCount: number;
+		},
+		revisionCursor: number,
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<IDocument & IJsonLdNodeObject> {
+		const document = matchingDocIds.shift();
+		if (Is.empty(document)) {
+			throw new NotFoundError(this.CLASS_NAME, "documentRevisionNotFound", identifier);
+		}
+
+		let revisions: (IDocument & IJsonLdNodeObject)[] | undefined;
+		let nextRevisionCursor;
+
+		if (options.maxRevisionCount > 0) {
+			revisions = matchingDocIds.slice(revisionCursor, revisionCursor + options.maxRevisionCount);
+			nextRevisionCursor =
+				matchingDocIds.length > revisionCursor + options.maxRevisionCount
+					? (revisionCursor + options.maxRevisionCount).toString()
+					: undefined;
+		}
+
+		if (options.includeBlobStorageMetadata || options.includeBlobStorageData) {
+			const blobEntry = await this._blobStorageComponent.get(
+				document.blobStorageId,
+				options.includeBlobStorageData,
+				userIdentity,
+				nodeIdentity
+			);
+			document.blobStorageEntry = blobEntry;
+			document["@context"].push(BlobStorageTypes.ContextRoot);
+		}
+
+		if (options.includeAttestation && Is.stringValue(document.attestationId)) {
+			const attestationInformation = await this._attestationComponent.get(document.attestationId);
+			document.attestationInformation = attestationInformation;
+			document["@context"].push(AttestationTypes.ContextRoot);
+		}
+
+		document.revisions = Is.arrayValue(revisions) ? revisions : undefined;
+		document.revisionCursor = nextRevisionCursor;
+
+		return document;
 	}
 }

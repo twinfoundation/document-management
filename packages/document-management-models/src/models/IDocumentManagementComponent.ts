@@ -3,6 +3,7 @@
 import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { UneceDocumentCodes } from "@twin.org/standards-unece";
+import type { IDocument } from "./IDocument";
 import type { IDocumentList } from "./IDocumentList";
 
 /**
@@ -38,11 +39,13 @@ export interface IDocumentManagementComponent extends IComponent {
 
 	/**
 	 * Get a specific document from an auditable item graph vertex.
+	 * @param auditableItemGraphId The auditable item graph vertex id to get the document from.
 	 * @param identifier The identifier of the document to get.
 	 * @param options Additional options for the get operation.
-	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document.
-	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document.
-	 * @param options.includeAttestation Flag to include the attestation information for the document.
+	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
+	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
+	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
+	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
 	 * @param options.maxRevisionCount Max number of revisions to return, defaults to 0.
 	 * @param revisionCursor The cursor to get the next chunk of revisions.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
@@ -50,32 +53,46 @@ export interface IDocumentManagementComponent extends IComponent {
 	 * @returns The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
 	 */
 	get(
+		auditableItemGraphId: string,
 		identifier: string,
 		options?: {
 			includeBlobStorageMetadata?: boolean;
 			includeBlobStorageData?: boolean;
 			includeAttestation?: boolean;
+			includeRemoved?: boolean;
 			maxRevisionCount?: number;
 		},
 		revisionCursor?: string,
 		userIdentity?: string,
 		nodeIdentity?: string
-	): Promise<IDocumentList>;
+	): Promise<IDocument>;
 
 	/**
 	 * Remove a specific document from an auditable item graph vertex.
 	 * The documents dateDeleted will be set, but can still be queried with the includeRemoved flag.
+	 * @param auditableItemGraphId The auditable item graph vertex id to remove the document from.
 	 * @param identifier The identifier of the document to remove.
+	 * @param options Additional options for the remove operation.
+	 * @param options.removeAllRevisions Flag to remove all revisions of the document, defaults to false.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
 	 * @param nodeIdentity The node identity to use for vault operations.
 	 * @returns Nothing.
 	 */
-	remove(identifier: string, userIdentity?: string, nodeIdentity?: string): Promise<void>;
+	remove(
+		auditableItemGraphId: string,
+		identifier: string,
+		options?: { removeAllRevisions?: boolean },
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<void>;
 
 	/**
 	 * Query an auditable item graph vertex for documents.
 	 * @param auditableItemGraphId The auditable item graph vertex to get the documents from.
 	 * @param documentCodes The document codes to query for, if undefined gets all document codes.
+	 * @param options Additional options for the query operation.
+	 * @param options.includeMostRecentRevisions Include the most recent 5 revisions, use the individual get to retrieve more.
+	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
 	 * @param cursor The cursor to get the next chunk of documents.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
 	 * @param nodeIdentity The node identity to use for vault operations.
@@ -84,6 +101,10 @@ export interface IDocumentManagementComponent extends IComponent {
 	query(
 		auditableItemGraphId: string,
 		documentCodes?: UneceDocumentCodes[],
+		options?: {
+			includeMostRecentRevisions?: boolean;
+			includeRemoved?: boolean;
+		},
 		cursor?: string,
 		userIdentity?: string,
 		nodeIdentity?: string

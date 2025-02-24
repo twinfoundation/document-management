@@ -22,14 +22,19 @@ export interface IDocument {
 	];
 
 	/**
-	 * The id of the document.
+	 * JSON-LD Type.
+	 */
+	type: typeof DocumentTypes.Document;
+
+	/**
+	 * The full id of the document.
 	 */
 	id: string;
 
 	/**
-	 * JSON-LD Type.
+	 * The id of the document.
 	 */
-	type: typeof DocumentTypes.Document;
+	documentId: string;
 
 	/**
 	 * The format of the document id.
@@ -90,4 +95,14 @@ export interface IDocument {
 	 * The date/time of when the document was deleted, as we never actually remove items.
 	 */
 	dateDeleted?: string;
+
+	/**
+	 * The previous revisions of the document.
+	 */
+	revisions?: IDocument[];
+
+	/**
+	 * The cursor to get the next chunk of revisions.
+	 */
+	revisionCursor?: string;
 }

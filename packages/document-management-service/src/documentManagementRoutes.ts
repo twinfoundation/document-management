@@ -56,7 +56,7 @@ export function generateRestRoutesDocumentManagement(
 			"Store a document in an auditable item graph vertex and add its content to blob storage.",
 		tag: tagsDocumentManagement[0].name,
 		method: "POST",
-		path: `${baseRouteName}/:id`,
+		path: `${baseRouteName}/:auditableItemGraphId`,
 		handler: async (httpRequestContext, request) =>
 			documentManagementSet(httpRequestContext, componentName, request),
 		requestType: {
@@ -66,7 +66,7 @@ export function generateRestRoutesDocumentManagement(
 					id: "DocumentManagementSetRequestExample",
 					request: {
 						pathParams: {
-							id: "aig:123456"
+							auditableItemGraphId: "aig:123456"
 						},
 						body: {
 							documentId: "2721000",
@@ -110,7 +110,7 @@ export function generateRestRoutesDocumentManagement(
 		summary: "Get the data for a document from document management",
 		tag: tagsDocumentManagement[0].name,
 		method: "GET",
-		path: `${baseRouteName}/:id`,
+		path: `${baseRouteName}/:auditableItemGraphId/:documentId`,
 		handler: async (httpRequestContext, request) =>
 			documentManagementGet(httpRequestContext, componentName, request),
 		requestType: {
@@ -120,7 +120,8 @@ export function generateRestRoutesDocumentManagement(
 					id: "DocumentManagementGetRequestExample",
 					request: {
 						pathParams: {
-							id: "documents:123456:705:2721000"
+							auditableItemGraphId: "aig:1234",
+							documentId: "documents:123456:705:2721000"
 						}
 					}
 				}
@@ -139,30 +140,21 @@ export function generateRestRoutesDocumentManagement(
 									DocumentTypes.ContextRootCommon,
 									SchemaOrgTypes.ContextRoot
 								],
-								type: DocumentTypes.DocumentList,
-								documents: [
-									{
-										"@context": [
-											DocumentTypes.ContextRoot,
-											DocumentTypes.ContextRootCommon,
-											SchemaOrgTypes.ContextRoot
-										],
-										type: DocumentTypes.Document,
-										id: "documents:123456:705:2721000",
-										documentIdFormat: "bol",
-										documentCode: UneceDocumentCodes.BillOfLading,
-										documentRevision: 0,
-										blobStorageId:
-											"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
-										blobHash: "sha256:123456",
-										dateCreated: "2024-01-01T00:00:00Z",
-										annotationObject: {
-											"@context": "https://schema.org",
-											"@type": "DigitalDocument",
-											name: "myfile.pdf"
-										}
-									}
-								]
+								type: DocumentTypes.Document,
+								id: "documents:705:2721000:rev-0",
+								documentId: "2721000",
+								documentIdFormat: "bol",
+								documentCode: UneceDocumentCodes.BillOfLading,
+								documentRevision: 0,
+								blobStorageId:
+									"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+								blobHash: "sha256:123456",
+								dateCreated: "2024-01-01T00:00:00Z",
+								annotationObject: {
+									"@context": "https://schema.org",
+									"@type": "DigitalDocument",
+									name: "myfile.pdf"
+								}
 							}
 						}
 					}
@@ -176,31 +168,26 @@ export function generateRestRoutesDocumentManagement(
 						id: "DocumentManagementGetResponseExample",
 						response: {
 							body: {
-								"@context": [DocumentTypes.ContextRoot, DocumentTypes.ContextRootCommon],
-								type: DocumentTypes.DocumentList,
-								documents: [
-									{
-										"@context": [
-											DocumentTypes.ContextRoot,
-											DocumentTypes.ContextRootCommon,
-											SchemaOrgTypes.ContextRoot
-										],
-										type: DocumentTypes.Document,
-										id: "documents:123456:705:2721000",
-										documentIdFormat: "bol",
-										documentCode: UneceDocumentCodes.BillOfLading,
-										documentRevision: 0,
-										blobStorageId:
-											"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
-										blobHash: "sha256:123456",
-										dateCreated: "2024-01-01T00:00:00Z",
-										annotationObject: {
-											"@context": "https://schema.org",
-											"@type": "DigitalDocument",
-											name: "myfile.pdf"
-										}
-									}
-								]
+								"@context": [
+									DocumentTypes.ContextRoot,
+									DocumentTypes.ContextRootCommon,
+									SchemaOrgTypes.ContextRoot
+								],
+								type: DocumentTypes.Document,
+								id: "documents:705:2721000:rev-0",
+								documentId: "2721000",
+								documentIdFormat: "bol",
+								documentCode: UneceDocumentCodes.BillOfLading,
+								documentRevision: 0,
+								blobStorageId:
+									"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+								blobHash: "sha256:123456",
+								dateCreated: "2024-01-01T00:00:00Z",
+								annotationObject: {
+									"@context": "https://schema.org",
+									"@type": "DigitalDocument",
+									name: "myfile.pdf"
+								}
 							}
 						}
 					}
@@ -220,7 +207,7 @@ export function generateRestRoutesDocumentManagement(
 		summary: "Remove an document from an auditable item graph vertex",
 		tag: tagsDocumentManagement[0].name,
 		method: "DELETE",
-		path: `${baseRouteName}/:id`,
+		path: `${baseRouteName}/:auditableItemGraphId/:documentId`,
 		handler: async (httpRequestContext, request) =>
 			documentManagementRemove(httpRequestContext, componentName, request),
 		requestType: {
@@ -230,7 +217,8 @@ export function generateRestRoutesDocumentManagement(
 					id: "DocumentManagementRemoveRequestExample",
 					request: {
 						pathParams: {
-							id: "documents:123456:705:2721000"
+							auditableItemGraphId: "aig:1234",
+							documentId: "documents:123456:705:2721000"
 						}
 					}
 				}
@@ -254,7 +242,7 @@ export function generateRestRoutesDocumentManagement(
 		summary: "Query the items from an auditable item graph vertex",
 		tag: tagsDocumentManagement[0].name,
 		method: "GET",
-		path: `${baseRouteName}/query/:id`,
+		path: `${baseRouteName}/:auditableItemGraphId`,
 		handler: async (httpRequestContext, request) =>
 			documentManagementQuery(httpRequestContext, componentName, request),
 		requestType: {
@@ -264,7 +252,7 @@ export function generateRestRoutesDocumentManagement(
 					id: "DocumentManagementQueryRequestExample",
 					request: {
 						pathParams: {
-							id: "aig:123456"
+							auditableItemGraphId: "aig:123456"
 						}
 					}
 				}
@@ -288,7 +276,8 @@ export function generateRestRoutesDocumentManagement(
 											SchemaOrgTypes.ContextRoot
 										],
 										type: DocumentTypes.Document,
-										id: "documents:123456:705:2721000",
+										id: "documents:705:2721000:rev-0",
+										documentId: "2721000",
 										documentIdFormat: "bol",
 										documentCode: UneceDocumentCodes.BillOfLading,
 										documentRevision: 0,
@@ -326,7 +315,8 @@ export function generateRestRoutesDocumentManagement(
 											SchemaOrgTypes.ContextRoot
 										],
 										type: DocumentTypes.Document,
-										id: "documents:123456:705:2721000",
+										id: "documents:705:2721000:rev-0",
+										documentId: "2721000",
 										documentIdFormat: "bol",
 										documentCode: UneceDocumentCodes.BillOfLading,
 										documentRevision: 0,
@@ -375,7 +365,11 @@ export async function documentManagementSet(
 		nameof(request.pathParams),
 		request.pathParams
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.auditableItemGraphId),
+		request.pathParams.auditableItemGraphId
+	);
 	Guards.object<IDocumentManagementSetRequest["body"]>(
 		ROUTES_SOURCE,
 		nameof(request.body),
@@ -385,7 +379,7 @@ export async function documentManagementSet(
 
 	const component = ComponentFactory.get<IDocumentManagementComponent>(componentName);
 	const id = await component.set(
-		request.pathParams.id,
+		request.pathParams.auditableItemGraphId,
 		request.body.documentId,
 		request.body.documentIdFormat,
 		request.body.documentCode,
@@ -422,18 +416,29 @@ export async function documentManagementGet(
 		nameof(request.pathParams),
 		request.pathParams
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.auditableItemGraphId),
+		request.pathParams.auditableItemGraphId
+	);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.documentId),
+		request.pathParams.documentId
+	);
 
 	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
 
 	const component = ComponentFactory.get<IDocumentManagementComponent>(componentName);
 
 	const result = await component.get(
-		request.pathParams.id,
+		request.pathParams.auditableItemGraphId,
+		request.pathParams.documentId,
 		{
-			includeBlobStorageMetadata: request.query?.includeBlobStorageMetadata,
-			includeBlobStorageData: request.query?.includeBlobStorageData,
-			includeAttestation: request.query?.includeAttestation,
+			includeBlobStorageMetadata: Coerce.boolean(request.query?.includeBlobStorageMetadata),
+			includeBlobStorageData: Coerce.boolean(request.query?.includeBlobStorageData),
+			includeAttestation: Coerce.boolean(request.query?.includeAttestation),
+			includeRemoved: Coerce.boolean(request.query?.includeRemoved),
 			maxRevisionCount: Coerce.integer(request.query?.maxRevisionCount)
 		},
 		request.query?.revisionCursor,
@@ -467,12 +472,25 @@ export async function documentManagementRemove(
 		nameof(request.pathParams),
 		request.pathParams
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.auditableItemGraphId),
+		request.pathParams.auditableItemGraphId
+	);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.documentId),
+		request.pathParams.documentId
+	);
 
 	const component = ComponentFactory.get<IDocumentManagementComponent>(componentName);
 
 	await component.remove(
-		request.pathParams.id,
+		request.pathParams.auditableItemGraphId,
+		request.pathParams.documentId,
+		{
+			removeAllRevisions: request.query?.removeAllRevisions
+		},
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);
@@ -500,15 +518,23 @@ export async function documentManagementQuery(
 		nameof(request.pathParams),
 		request.pathParams
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.pathParams.id), request.pathParams.id);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.auditableItemGraphId),
+		request.pathParams.auditableItemGraphId
+	);
 
 	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
 
 	const component = ComponentFactory.get<IDocumentManagementComponent>(componentName);
 
 	const result = await component.query(
-		request.pathParams.id,
+		request.pathParams.auditableItemGraphId,
 		HttpParameterHelper.arrayFromString(request.query?.documentCodes),
+		{
+			includeRemoved: Coerce.boolean(request.query?.includeRemoved),
+			includeMostRecentRevisions: Coerce.boolean(request.query?.includeMostRecentRevisions)
+		},
 		request.query?.cursor,
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity

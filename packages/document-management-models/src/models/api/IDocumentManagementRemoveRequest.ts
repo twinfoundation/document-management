@@ -10,8 +10,24 @@ export interface IDocumentManagementRemoveRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the document to get which includes the auditable item graph vertex.
+		 * The id of the auditable item graph vertex to remove the document from.
 		 */
-		id: string;
+		auditableItemGraphId: string;
+
+		/**
+		 * The full id of the document to remove.
+		 */
+		documentId: string;
+	};
+
+	/**
+	 * The query parameters.
+	 */
+	query?: {
+		/**
+		 * Flag to remove all revisions of the document.
+		 * @default false
+		 */
+		removeAllRevisions?: boolean;
 	};
 }

@@ -16,7 +16,12 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        package: ['packages/document-management-models', 'packages/document-management-service']
+        package:
+          [
+            'packages/document-management-models',
+            'packages/document-management-service',
+            'packages/document-management-rest-client'
+          ]
 
     steps:
       - name: Checkout

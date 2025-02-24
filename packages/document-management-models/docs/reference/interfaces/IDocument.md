@@ -12,19 +12,27 @@ JSON-LD Context.
 
 ***
 
-### id
-
-> **id**: `string`
-
-The id of the document.
-
-***
-
 ### type
 
 > **type**: `"Document"`
 
 JSON-LD Type.
+
+***
+
+### id
+
+> **id**: `string`
+
+The full id of the document.
+
+***
+
+### documentId
+
+> **documentId**: `string`
+
+The id of the document.
 
 ***
 
@@ -121,3 +129,19 @@ The date/time of when the document was modified.
 > `optional` **dateDeleted**: `string`
 
 The date/time of when the document was deleted, as we never actually remove items.
+
+***
+
+### revisions?
+
+> `optional` **revisions**: [`IDocument`](IDocument.md)[]
+
+The previous revisions of the document.
+
+***
+
+### revisionCursor?
+
+> `optional` **revisionCursor**: `string`
+
+The cursor to get the next chunk of revisions.

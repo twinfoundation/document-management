@@ -1,6 +1,10 @@
-# Class: DocumentManagementService
+# Class: DocumentManagementClient
 
-Service for performing document management operations.
+Client for performing document management through to REST endpoints.
+
+## Extends
+
+- `BaseRestClient`
 
 ## Implements
 
@@ -8,37 +12,33 @@ Service for performing document management operations.
 
 ## Constructors
 
-### new DocumentManagementService()
+### new DocumentManagementClient()
 
-> **new DocumentManagementService**(`options`?): [`DocumentManagementService`](DocumentManagementService.md)
+> **new DocumentManagementClient**(`config`): [`DocumentManagementClient`](DocumentManagementClient.md)
 
-Create a new instance of DocumentManagementService.
+Create a new instance of DocumentManagementClient.
 
 #### Parameters
 
-##### options?
+##### config
 
-[`IDocumentManagementServiceConstructorOptions`](../interfaces/IDocumentManagementServiceConstructorOptions.md)
+`IBaseRestClientConfig`
 
-The options for the service.
+The configuration for the client.
 
 #### Returns
 
-[`DocumentManagementService`](DocumentManagementService.md)
+[`DocumentManagementClient`](DocumentManagementClient.md)
+
+#### Overrides
+
+`BaseRestClient.constructor`
 
 ## Properties
 
-### NAMESPACE
-
-> `readonly` `static` **NAMESPACE**: `string` = `"documents"`
-
-The namespace supported by the document management service.
-
-***
-
 ### CLASS\_NAME
 
-> `readonly` **CLASS\_NAME**: `string`
+> `readonly` **CLASS\_NAME**: `string` = `DocumentManagementClient._CLASS_NAME`
 
 Runtime name for the class.
 
@@ -50,7 +50,7 @@ Runtime name for the class.
 
 ### set()
 
-> **set**(`auditableItemGraphId`, `documentId`, `documentIdFormat`, `documentCode`, `blob`, `annotationObject`?, `createAttestation`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`string`\>
+> **set**(`auditableItemGraphId`, `documentId`, `documentIdFormat`, `documentCode`, `blob`, `annotationObject`?, `createAttestation`?): `Promise`\<`string`\>
 
 Store a document in an auditable item graph vertex and add its content to blob storage.
 If the document id already exists and the blob data is different a new revision will be created.
@@ -100,18 +100,6 @@ Additional information to associate with the document.
 
 Flag to create an attestation for the document, defaults to false.
 
-##### userIdentity?
-
-`string`
-
-The identity to perform the auditable item graph operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
-
 #### Returns
 
 `Promise`\<`string`\>
@@ -126,7 +114,7 @@ The identifier for the document which includes the auditable item graph identifi
 
 ### get()
 
-> **get**(`auditableItemGraphId`, `identifier`, `options`?, `revisionCursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`IDocument`\>
+> **get**(`auditableItemGraphId`, `identifier`, `options`?, `revisionCursor`?): `Promise`\<`IDocument`\>
 
 Get a specific document from an auditable item graph vertex.
 
@@ -148,31 +136,31 @@ The identifier of the document to get.
 
 Additional options for the get operation.
 
-###### includeBlobStorageMetadata?
+###### includeBlobStorageMetadata
 
 `boolean`
 
 Flag to include the blob storage metadata for the document, defaults to false.
 
-###### includeBlobStorageData?
+###### includeBlobStorageData
 
 `boolean`
 
 Flag to include the blob storage data for the document, defaults to false.
 
-###### includeAttestation?
+###### includeAttestation
 
 `boolean`
 
 Flag to include the attestation information for the document, defaults to false.
 
-###### includeRemoved?
+###### includeRemoved
 
 `boolean`
 
 Flag to include deleted documents, defaults to false.
 
-###### maxRevisionCount?
+###### maxRevisionCount
 
 `number`
 
@@ -183,18 +171,6 @@ Max number of revisions to return, defaults to 0.
 `string`
 
 The cursor to get the next chunk of revisions.
-
-##### userIdentity?
-
-`string`
-
-The identity to perform the auditable item graph operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 
@@ -210,7 +186,7 @@ The documents and revisions if requested, ordered by revision descending, cursor
 
 ### remove()
 
-> **remove**(`auditableItemGraphId`, `identifier`, `options`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
+> **remove**(`auditableItemGraphId`, `identifier`, `options`?): `Promise`\<`void`\>
 
 Remove a specific document from an auditable item graph vertex.
 The documents dateDeleted will be set, but can still be queried with the includeRemoved flag.
@@ -233,23 +209,11 @@ The identifier of the document to remove.
 
 Additional options for the remove operation.
 
-###### removeAllRevisions?
+###### removeAllRevisions
 
 `boolean`
 
 Flag to remove all revisions of the document, defaults to false.
-
-##### userIdentity?
-
-`string`
-
-The identity to perform the auditable item graph operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 
@@ -265,7 +229,7 @@ Nothing.
 
 ### query()
 
-> **query**(`auditableItemGraphId`, `documentCodes`?, `options`?, `cursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`IDocumentList`\>
+> **query**(`auditableItemGraphId`, `documentCodes`?, `options`?, `cursor`?): `Promise`\<`IDocumentList`\>
 
 Query an auditable item graph vertex for documents.
 
@@ -287,13 +251,13 @@ The document codes to query for, if undefined gets all document codes.
 
 Additional options for the query operation.
 
-###### includeMostRecentRevisions?
+###### includeMostRecentRevisions
 
 `boolean`
 
 Include the most recent 5 revisions, use the individual get to retrieve more.
 
-###### includeRemoved?
+###### includeRemoved
 
 `boolean`
 
@@ -304,18 +268,6 @@ Flag to include deleted documents, defaults to false.
 `string`
 
 The cursor to get the next chunk of documents.
-
-##### userIdentity?
-
-`string`
-
-The identity to perform the auditable item graph operation with.
-
-##### nodeIdentity?
-
-`string`
-
-The node identity to use for vault operations.
 
 #### Returns
 

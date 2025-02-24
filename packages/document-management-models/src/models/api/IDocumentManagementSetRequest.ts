@@ -12,9 +12,9 @@ export interface IDocumentManagementSetRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the auditable item graph vertex.
+		 * The id of the auditable item graph vertex to store the document on.
 		 */
-		id: string;
+		auditableItemGraphId: string;
 	};
 
 	/**

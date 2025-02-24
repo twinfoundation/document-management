@@ -82,11 +82,17 @@ The identifier for the document which includes the auditable item graph identifi
 
 ### get()
 
-> **get**(`identifier`, `options`?, `revisionCursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IDocumentList`](IDocumentList.md)\>
+> **get**(`auditableItemGraphId`, `identifier`, `options`?, `revisionCursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IDocument`](IDocument.md)\>
 
 Get a specific document from an auditable item graph vertex.
 
 #### Parameters
+
+##### auditableItemGraphId
+
+`string`
+
+The auditable item graph vertex id to get the document from.
 
 ##### identifier
 
@@ -102,19 +108,25 @@ Additional options for the get operation.
 
 `boolean`
 
-Flag to include the blob storage metadata for the document.
+Flag to include the blob storage metadata for the document, defaults to false.
 
 ###### includeBlobStorageData?
 
 `boolean`
 
-Flag to include the blob storage data for the document.
+Flag to include the blob storage data for the document, defaults to false.
 
 ###### includeAttestation?
 
 `boolean`
 
-Flag to include the attestation information for the document.
+Flag to include the attestation information for the document, defaults to false.
+
+###### includeRemoved?
+
+`boolean`
+
+Flag to include deleted documents, defaults to false.
 
 ###### maxRevisionCount?
 
@@ -142,7 +154,7 @@ The node identity to use for vault operations.
 
 #### Returns
 
-`Promise`\<[`IDocumentList`](IDocumentList.md)\>
+`Promise`\<[`IDocument`](IDocument.md)\>
 
 The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
 
@@ -150,18 +162,34 @@ The documents and revisions if requested, ordered by revision descending, cursor
 
 ### remove()
 
-> **remove**(`identifier`, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
+> **remove**(`auditableItemGraphId`, `identifier`, `options`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<`void`\>
 
 Remove a specific document from an auditable item graph vertex.
 The documents dateDeleted will be set, but can still be queried with the includeRemoved flag.
 
 #### Parameters
 
+##### auditableItemGraphId
+
+`string`
+
+The auditable item graph vertex id to remove the document from.
+
 ##### identifier
 
 `string`
 
 The identifier of the document to remove.
+
+##### options?
+
+Additional options for the remove operation.
+
+###### removeAllRevisions?
+
+`boolean`
+
+Flag to remove all revisions of the document, defaults to false.
 
 ##### userIdentity?
 
@@ -185,7 +213,7 @@ Nothing.
 
 ### query()
 
-> **query**(`auditableItemGraphId`, `documentCodes`?, `cursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IDocumentList`](IDocumentList.md)\>
+> **query**(`auditableItemGraphId`, `documentCodes`?, `options`?, `cursor`?, `userIdentity`?, `nodeIdentity`?): `Promise`\<[`IDocumentList`](IDocumentList.md)\>
 
 Query an auditable item graph vertex for documents.
 
@@ -202,6 +230,22 @@ The auditable item graph vertex to get the documents from.
 `string`[]
 
 The document codes to query for, if undefined gets all document codes.
+
+##### options?
+
+Additional options for the query operation.
+
+###### includeMostRecentRevisions?
+
+`boolean`
+
+Include the most recent 5 revisions, use the individual get to retrieve more.
+
+###### includeRemoved?
+
+`boolean`
+
+Flag to include deleted documents, defaults to false.
 
 ##### cursor?
 

@@ -10,11 +10,11 @@ Request to set a document in an auditable item graph vertex.
 
 The path parameters.
 
-#### id
+#### auditableItemGraphId
 
-> **id**: `string`
+> **auditableItemGraphId**: `string`
 
-The id of the auditable item graph vertex.
+The id of the auditable item graph vertex to store the document on.
 
 ***
 

@@ -22,11 +22,11 @@ The headers which can be used to determine the response data type.
 
 The path parameters.
 
-#### id
+#### auditableItemGraphId
 
-> **id**: `string`
+> **auditableItemGraphId**: `string`
 
-The id of the auditable item graph vertex.
+The id of the auditable item graph vertex which contains the documents.
 
 ***
 
@@ -41,6 +41,30 @@ The query parameters.
 > `optional` **documentCodes**: `string`
 
 List of comma separated document codes to filter the query.
+
+#### includeRemoved?
+
+> `optional` **includeRemoved**: `boolean`
+
+Include deleted documents in the response.
+
+##### Default
+
+```ts
+false
+```
+
+#### includeMostRecentRevisions?
+
+> `optional` **includeMostRecentRevisions**: `boolean`
+
+Include the most recent 5 revisions, use the individual get to retrieve more.
+
+##### Default
+
+```ts
+false
+```
 
 #### cursor?
 
