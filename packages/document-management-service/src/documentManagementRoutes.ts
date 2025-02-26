@@ -154,7 +154,11 @@ export function generateRestRoutesDocumentManagement(
 									"@context": "https://schema.org",
 									"@type": "DigitalDocument",
 									name: "myfile.pdf"
-								}
+								},
+								nodeIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+								userIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
 							}
 						}
 					}
@@ -187,7 +191,11 @@ export function generateRestRoutesDocumentManagement(
 									"@context": "https://schema.org",
 									"@type": "DigitalDocument",
 									name: "myfile.pdf"
-								}
+								},
+								nodeIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+								userIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
 							}
 						}
 					}
@@ -289,7 +297,11 @@ export function generateRestRoutesDocumentManagement(
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
-										}
+										},
+										nodeIdentity:
+											"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+										userIdentity:
+											"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
 									}
 								]
 							}
@@ -328,7 +340,11 @@ export function generateRestRoutesDocumentManagement(
 											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											name: "myfile.pdf"
-										}
+										},
+										nodeIdentity:
+											"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+										userIdentity:
+											"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
 									}
 								]
 							}

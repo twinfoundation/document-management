@@ -25,6 +25,7 @@ import { Sha256 } from "@twin.org/crypto";
 import { JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import {
 	DocumentTypes,
+	type IDocumentAttestation,
 	type IDocument,
 	type IDocumentList,
 	type IDocumentManagementComponent
@@ -125,6 +126,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			Object.values(UneceDocumentCodes)
 		);
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
+		Guards.stringValue(this.CLASS_NAME, nameof(userIdentity), userIdentity);
+		Guards.stringValue(this.CLASS_NAME, nameof(nodeIdentity), nodeIdentity);
 
 		try {
 			const vertex = await this._auditableItemGraphComponent.get(auditableItemGraphId);
@@ -137,23 +140,43 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			// Reduce the list to those with a matching id and code
 			const matchingDocIds = this.findMatchingDocs(vertexDocs, documentId, documentCode, true);
 
+			const currentRevision = matchingDocIds[0];
+
+			// If the create attestation flag is not defined we check to see if any previous
+			// revisions have an attestation and if so we create one for the new revision.
+			if (Is.undefined(createAttestation)) {
+				createAttestation = matchingDocIds.some(d => Is.stringValue(d.attestationId));
+			}
+
 			// Calculate the hash for the blob.
 			const blobHash = this.generateBlobHash(blob);
 
-			let documentRevision;
+			// Is the blob data the same as the current revision ?
+			if (currentRevision?.blobHash === blobHash) {
+				// Blob data matches so no need to create a new revision
+				// We update the current object if the annotation or createAttestation flag has changed.
 
-			if (Is.arrayValue(matchingDocIds) && matchingDocIds[0].blobHash === blobHash) {
-				documentRevision = matchingDocIds[0].documentRevision;
+				let updated = false;
+				if (!ObjectHelper.equal(currentRevision.annotationObject, annotationObject, false)) {
+					currentRevision.annotationObject = annotationObject;
+					updated = true;
+				}
 
-				// If there is already a doc with the matching blob hash no need to create a new revision
-				// instead we just update the annotation object if it has changed.
-				if (!ObjectHelper.equal(matchingDocIds[0].annotationObject, annotationObject, false)) {
-					matchingDocIds[0].dateModified = new Date().toISOString();
-					matchingDocIds[0].annotationObject = annotationObject;
+				if (createAttestation && Is.empty(currentRevision.attestationId)) {
+					currentRevision.attestationId = await this.createAttestation(
+						currentRevision,
+						userIdentity,
+						nodeIdentity
+					);
+					updated = true;
+				}
+
+				if (updated) {
+					currentRevision.dateModified = new Date().toISOString();
 					await this._auditableItemGraphComponent.update(vertex, userIdentity, nodeIdentity);
 				}
 
-				return matchingDocIds[0].id;
+				return currentRevision.id;
 			}
 
 			// Nothing matches the current blob hash so upload it to blob storage
@@ -167,7 +190,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				nodeIdentity
 			);
 
-			documentRevision = matchingDocIds.length;
+			const documentRevision = matchingDocIds.length;
 
 			// We are creating a new document, if there is already docs with the same id and code we use the list length
 			// to determine the next revision number.
@@ -185,22 +208,16 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				documentRevision,
 				blobStorageId,
 				blobHash,
-				dateCreated: new Date(Date.now()).toISOString()
+				annotationObject,
+				dateCreated: new Date(Date.now()).toISOString(),
+				nodeIdentity,
+				userIdentity
 			};
 
 			// If the attestation flag is set then create it
 			if (createAttestation ?? false) {
-				document.attestationId = await this._attestationComponent.create(
-					document,
-					undefined,
-					userIdentity,
-					nodeIdentity
-				);
+				document.attestationId = await this.createAttestation(document, userIdentity, nodeIdentity);
 			}
-
-			// We assign the annotation object after the attestation was created
-			// as we don't want to include it in the attestation
-			document.annotationObject = annotationObject;
 
 			// Add the new revision in to the AIG
 			vertex.resources.push({
@@ -681,5 +698,38 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 		document.revisionCursor = nextRevisionCursor;
 
 		return document;
+	}
+
+	/**
+	 * Create an attestation for the document.
+	 * @param document The document to create the attestation for.
+	 * @param userIdentity The identity to perform the attestation operation with.
+	 * @param nodeIdentity The node identity to perform attestation operation with.
+	 * @returns The attestation identifier.
+	 */
+	private async createAttestation(
+		document: IDocument,
+		userIdentity: string,
+		nodeIdentity: string
+	): Promise<string> {
+		const documentAttestation: IDocumentAttestation & IJsonLdNodeObject = {
+			"@context": [
+				DocumentTypes.ContextRoot,
+				DocumentTypes.ContextRootCommon,
+				SchemaOrgTypes.ContextRoot
+			],
+			type: DocumentTypes.DocumentAttestation,
+			documentId: document.documentId,
+			documentCode: document.documentCode,
+			documentRevision: document.documentRevision,
+			dateCreated: document.dateCreated,
+			blobHash: document.blobHash
+		};
+		return this._attestationComponent.create(
+			documentAttestation,
+			undefined,
+			userIdentity,
+			nodeIdentity
+		);
 	}
 }

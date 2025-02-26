@@ -136,31 +136,31 @@ The identifier of the document to get.
 
 Additional options for the get operation.
 
-###### includeBlobStorageMetadata
+###### includeBlobStorageMetadata?
 
 `boolean`
 
 Flag to include the blob storage metadata for the document, defaults to false.
 
-###### includeBlobStorageData
+###### includeBlobStorageData?
 
 `boolean`
 
 Flag to include the blob storage data for the document, defaults to false.
 
-###### includeAttestation
+###### includeAttestation?
 
 `boolean`
 
 Flag to include the attestation information for the document, defaults to false.
 
-###### includeRemoved
+###### includeRemoved?
 
 `boolean`
 
 Flag to include deleted documents, defaults to false.
 
-###### maxRevisionCount
+###### maxRevisionCount?
 
 `number`
 
@@ -209,7 +209,7 @@ The identifier of the document to remove.
 
 Additional options for the remove operation.
 
-###### removeAllRevisions
+###### removeAllRevisions?
 
 `boolean`
 
@@ -251,13 +251,13 @@ The document codes to query for, if undefined gets all document codes.
 
 Additional options for the query operation.
 
-###### includeMostRecentRevisions
+###### includeMostRecentRevisions?
 
 `boolean`
 
 Include the most recent 5 revisions, use the individual get to retrieve more.
 
-###### includeRemoved
+###### includeRemoved?
 
 `boolean`
 

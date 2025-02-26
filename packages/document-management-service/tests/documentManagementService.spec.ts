@@ -192,7 +192,7 @@ describe("document-management-service", async () => {
 				id: "5858585858585858585858585858585858585858585858585858585858585858",
 				immutableMetadata: {
 					proof:
-						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJkb2N1bWVudHM6NzA1OnRlc3QtZG9jLWlkOmFhYTpyZXYtMCIsInZjIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vd3d3LnczLm9yZy9ucy9jcmVkZW50aWFscy92MiIsImh0dHBzOi8vc2NoZW1hLnR3aW5kZXYub3JnL2RvY3VtZW50cy8iLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9jb21tb24vIiwiaHR0cHM6Ly9zY2hlbWEub3JnIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJEb2N1bWVudCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJibG9iU3RvcmFnZUlkIjoiYmxvYjptZW1vcnk6YTU5MWE2ZDQwYmY0MjA0MDRhMDExNzMzY2ZiN2IxOTBkNjJjNjViZjBiY2RhMzJiNTdiMjc3ZDlhZDlmMTQ2ZSIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9IiwiZGF0ZUNyZWF0ZWQiOiIyMDI0LTA4LTIyVDA0OjEzOjIwLjAwMFoiLCJub2RlSWRlbnRpdHkiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzIn19fQ.p5phii2IZMjkRCl3FNYbUyqAyPP79EjQ4bpKJ0BlvqIyyn2aXZEeQXQyzHU-quh8EfFG_BJtrHSKKYkMkk4XCw",
+						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzIiwibmJmIjoxNzI0MzAwMDAwLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9kb2N1bWVudHMvIiwiaHR0cHM6Ly9zY2hlbWEudHdpbmRldi5vcmcvY29tbW9uLyIsImh0dHBzOi8vc2NoZW1hLm9yZyJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRG9jdW1lbnRBdHRlc3RhdGlvbiJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJkYXRlQ3JlYXRlZCI6IjIwMjQtMDgtMjJUMDQ6MTM6MjAuMDAwWiIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9In19fQ.O-MiDi_7OS6ZBgT9LAY55bSZGv8VUjckWjqpSKMrG_RaISl9EAzYsTvaev2JP6OludKuMY-ubEqYcwdkAd5-CA",
 					version: "1"
 				},
 				issuer:
@@ -414,7 +414,9 @@ describe("document-management-service", async () => {
 			documentRevision: 0,
 			dateCreated: "2024-08-22T04:13:20.000Z",
 			nodeIdentity:
-				"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
+				"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+			userIdentity:
+				"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858"
 		});
 	});
 
@@ -471,6 +473,8 @@ describe("document-management-service", async () => {
 			dateCreated: "2024-08-22T04:13:20.000Z",
 			nodeIdentity:
 				"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+			userIdentity:
+				"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858",
 			blobStorageEntry: {
 				type: "BlobStorageEntry",
 				id: "blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
@@ -536,6 +540,8 @@ describe("document-management-service", async () => {
 			dateCreated: "2024-08-22T04:13:20.000Z",
 			nodeIdentity:
 				"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+			userIdentity:
+				"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858",
 			blobStorageEntry: {
 				type: "BlobStorageEntry",
 				id: "blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
@@ -603,6 +609,8 @@ describe("document-management-service", async () => {
 			dateCreated: "2024-08-22T04:13:20.000Z",
 			nodeIdentity:
 				"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+			userIdentity:
+				"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858",
 			blobStorageEntry: {
 				type: "BlobStorageEntry",
 				id: "blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
@@ -616,17 +624,12 @@ describe("document-management-service", async () => {
 			attestationInformation: {
 				type: "Information",
 				attestationObject: {
-					type: "Document",
+					type: "DocumentAttestation",
 					blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
-					blobStorageId:
-						"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
 					dateCreated: "2024-08-22T04:13:20.000Z",
 					documentCode: "unece:DocumentCodeList#705",
 					documentRevision: 0,
-					id: "documents:705:test-doc-id:aaa:rev-0",
-					documentId: "test-doc-id:aaa",
-					nodeIdentity:
-						"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
+					documentId: "test-doc-id:aaa"
 				},
 				dateCreated: "2024-08-22T04:13:20.000Z",
 				holderIdentity:
@@ -637,7 +640,7 @@ describe("document-management-service", async () => {
 				proof: {
 					type: "JwtProof",
 					value:
-						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJkb2N1bWVudHM6NzA1OnRlc3QtZG9jLWlkOmFhYTpyZXYtMCIsInZjIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vd3d3LnczLm9yZy9ucy9jcmVkZW50aWFscy92MiIsImh0dHBzOi8vc2NoZW1hLnR3aW5kZXYub3JnL2RvY3VtZW50cy8iLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9jb21tb24vIiwiaHR0cHM6Ly9zY2hlbWEub3JnIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJEb2N1bWVudCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJibG9iU3RvcmFnZUlkIjoiYmxvYjptZW1vcnk6YTU5MWE2ZDQwYmY0MjA0MDRhMDExNzMzY2ZiN2IxOTBkNjJjNjViZjBiY2RhMzJiNTdiMjc3ZDlhZDlmMTQ2ZSIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9IiwiZGF0ZUNyZWF0ZWQiOiIyMDI0LTA4LTIyVDA0OjEzOjIwLjAwMFoiLCJub2RlSWRlbnRpdHkiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzIn19fQ.p5phii2IZMjkRCl3FNYbUyqAyPP79EjQ4bpKJ0BlvqIyyn2aXZEeQXQyzHU-quh8EfFG_BJtrHSKKYkMkk4XCw"
+						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzNjM2MzYzIiwibmJmIjoxNzI0MzAwMDAwLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9kb2N1bWVudHMvIiwiaHR0cHM6Ly9zY2hlbWEudHdpbmRldi5vcmcvY29tbW9uLyIsImh0dHBzOi8vc2NoZW1hLm9yZyJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRG9jdW1lbnRBdHRlc3RhdGlvbiJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJkYXRlQ3JlYXRlZCI6IjIwMjQtMDgtMjJUMDQ6MTM6MjAuMDAwWiIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9In19fQ.O-MiDi_7OS6ZBgT9LAY55bSZGv8VUjckWjqpSKMrG_RaISl9EAzYsTvaev2JP6OludKuMY-ubEqYcwdkAd5-CA"
 				},
 				verified: true
 			}

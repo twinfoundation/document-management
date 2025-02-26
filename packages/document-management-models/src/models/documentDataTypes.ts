@@ -22,6 +22,11 @@ export const DocumentTypes = {
 	Document: "Document",
 
 	/**
+	 * Represents a document attestation.
+	 */
+	DocumentAttestation: "DocumentAttestation",
+
+	/**
 	 * Represents a document list.
 	 */
 	DocumentList: "DocumentList"

@@ -24,6 +24,12 @@ The context root for the common types.
 
 Represents a document.
 
+### DocumentAttestation
+
+> `readonly` **DocumentAttestation**: `"DocumentAttestation"` = `"DocumentAttestation"`
+
+Represents a document attestation.
+
 ### DocumentList
 
 > `readonly` **DocumentList**: `"DocumentList"` = `"DocumentList"`

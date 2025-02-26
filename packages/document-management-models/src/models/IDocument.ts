@@ -97,6 +97,16 @@ export interface IDocument {
 	dateDeleted?: string;
 
 	/**
+	 * The node which added the document to the graph.
+	 */
+	nodeIdentity: string;
+
+	/**
+	 * The user who added the document to the graph.
+	 */
+	userIdentity: string;
+
+	/**
 	 * The previous revisions of the document.
 	 */
 	revisions?: IDocument[];

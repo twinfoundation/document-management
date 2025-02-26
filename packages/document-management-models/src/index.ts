@@ -8,5 +8,6 @@ export * from "./models/api/IDocumentManagementRemoveRequest";
 export * from "./models/api/IDocumentManagementSetRequest";
 export * from "./models/documentDataTypes";
 export * from "./models/IDocument";
+export * from "./models/IDocumentAttestation";
 export * from "./models/IDocumentList";
 export * from "./models/IDocumentManagementComponent";

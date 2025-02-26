@@ -132,6 +132,22 @@ The date/time of when the document was deleted, as we never actually remove item
 
 ***
 
+### nodeIdentity
+
+> **nodeIdentity**: `string`
+
+The node which added the document to the graph.
+
+***
+
+### userIdentity
+
+> **userIdentity**: `string`
+
+The user who added the document to the graph.
+
+***
+
 ### revisions?
 
 > `optional` **revisions**: [`IDocument`](IDocument.md)[]

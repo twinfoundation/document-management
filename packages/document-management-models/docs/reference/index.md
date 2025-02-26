@@ -3,6 +3,7 @@
 ## Interfaces
 
 - [IDocument](interfaces/IDocument.md)
+- [IDocumentAttestation](interfaces/IDocumentAttestation.md)
 - [IDocumentList](interfaces/IDocumentList.md)
 - [IDocumentManagementComponent](interfaces/IDocumentManagementComponent.md)
 - [IDocumentManagementGetRequest](interfaces/IDocumentManagementGetRequest.md)
