@@ -50,5 +50,15 @@ export interface IDocumentManagementSetRequest {
 		 * Flag to create an attestation for the document, defaults to false
 		 */
 		createAttestation?: boolean;
+
+		/**
+		 * Include the document id as an alias to the aig vertex, defaults to false.
+		 */
+		includeIdAsAlias?: boolean;
+
+		/**
+		 * Additional information to associate with the alias.
+		 */
+		aliasAnnotationObject?: IJsonLdNodeObject;
 	};
 }

@@ -101,7 +101,10 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @param documentCode The code for the document type.
 	 * @param blob The data to create the document.
 	 * @param annotationObject Additional information to associate with the document.
-	 * @param createAttestation Flag to create an attestation for the document, defaults to false.
+	 * @param options Additional options for the set operation.
+	 * @param options.createAttestation Flag to create an attestation for the document, defaults to false.
+	 * @param options.includeIdAsAlias Include the document id as an alias to the aig vertex, defaults to false.
+	 * @param options.aliasAnnotationObject Additional information to associate with the alias.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
 	 * @param nodeIdentity The node identity to use for vault operations.
 	 * @returns The identifier for the document which includes the auditable item graph identifier.
@@ -113,7 +116,11 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 		documentCode: UneceDocumentCodes,
 		blob: Uint8Array,
 		annotationObject?: IJsonLdNodeObject,
-		createAttestation?: boolean,
+		options?: {
+			createAttestation?: boolean;
+			includeIdAsAlias?: boolean;
+			aliasAnnotationObject?: IJsonLdNodeObject;
+		},
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string> {
@@ -134,6 +141,23 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 
 			vertex.resources = vertex.resources ?? [];
 
+			if (options?.includeIdAsAlias ?? false) {
+				vertex.aliases ??= [];
+				const found = vertex.aliases.find(a => a.id === documentId);
+				if (found) {
+					found.annotationObject = options?.aliasAnnotationObject ?? found.annotationObject;
+					found.aliasFormat = documentIdFormat ?? found.aliasFormat;
+				} else {
+					vertex.aliases.push({
+						"@context": AuditableItemGraphTypes.ContextRoot,
+						type: AuditableItemGraphTypes.Alias,
+						id: documentId,
+						aliasFormat: documentIdFormat,
+						annotationObject: options?.aliasAnnotationObject
+					});
+				}
+			}
+
 			// Get all the docs from the AIG vertex
 			const vertexDocs = this.filterDocumentsFromVertex(vertex);
 
@@ -142,9 +166,11 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 
 			const currentRevision = matchingDocIds[0];
 
+			let createAttestation = options?.createAttestation ?? false;
+
 			// If the create attestation flag is not defined we check to see if any previous
 			// revisions have an attestation and if so we create one for the new revision.
-			if (Is.undefined(createAttestation)) {
+			if (Is.undefined(options?.createAttestation)) {
 				createAttestation = matchingDocIds.some(d => Is.stringValue(d.attestationId));
 			}
 
@@ -172,7 +198,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				}
 
 				if (updated) {
-					currentRevision.dateModified = new Date().toISOString();
+					currentRevision.dateModified = new Date(Date.now()).toISOString();
 					await this._auditableItemGraphComponent.update(vertex, userIdentity, nodeIdentity);
 				}
 

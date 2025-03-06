@@ -20,7 +20,10 @@ export interface IDocumentManagementComponent extends IComponent {
 	 * @param documentCode The code for the document type.
 	 * @param blob The data to create the document with.
 	 * @param annotationObject Additional information to associate with the document.
-	 * @param createAttestation Flag to create an attestation for the document, defaults to false.
+	 * @param options Additional options for the set operation.
+	 * @param options.createAttestation Flag to create an attestation for the document, defaults to false.
+	 * @param options.includeIdAsAlias Include the document id as an alias to the aig vertex, defaults to false.
+	 * @param options.aliasAnnotationObject Additional information to associate with the alias.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
 	 * @param nodeIdentity The node identity to use for vault operations.
 	 * @returns The identifier for the document which includes the auditable item graph identifier.
@@ -32,7 +35,11 @@ export interface IDocumentManagementComponent extends IComponent {
 		documentCode: UneceDocumentCodes,
 		blob: Uint8Array,
 		annotationObject?: IJsonLdNodeObject,
-		createAttestation?: boolean,
+		options?: {
+			createAttestation?: boolean;
+			includeIdAsAlias?: boolean;
+			aliasAnnotationObject?: IJsonLdNodeObject;
+		},
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<string>;

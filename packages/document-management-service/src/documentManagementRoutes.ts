@@ -401,7 +401,11 @@ export async function documentManagementSet(
 		request.body.documentCode,
 		Converter.base64ToBytes(request.body.blob),
 		request.body.annotationObject,
-		request.body.createAttestation,
+		{
+			createAttestation: request.body.createAttestation,
+			includeIdAsAlias: request.body.includeIdAsAlias,
+			aliasAnnotationObject: request.body.aliasAnnotationObject
+		},
 		httpRequestContext.userIdentity,
 		httpRequestContext.nodeIdentity
 	);

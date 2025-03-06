@@ -180,7 +180,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -219,6 +221,134 @@ describe("document-management-service", async () => {
 					"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858"
 			}
 		]);
+
+		const aigStore = vertexEntityStorage.getStore();
+		expect(aigStore).toEqual([
+			{
+				id: "5858585858585858585858585858585858585858585858585858585858585858",
+				nodeIdentity:
+					"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+				dateCreated: "2024-08-22T04:13:20.000Z",
+				dateModified: "2024-08-22T04:13:20.000Z",
+				resources: [
+					{
+						dateCreated: "2024-08-22T04:13:20.000Z",
+						resourceObject: {
+							"@context": [
+								"https://schema.twindev.org/documents/",
+								"https://schema.twindev.org/common/",
+								"https://schema.org"
+							],
+							type: "Document",
+							id: "documents:705:test-doc-id:aaa:rev-0",
+							documentId: "test-doc-id:aaa",
+							documentCode: "unece:DocumentCodeList#705",
+							documentRevision: 0,
+							blobStorageId:
+								"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
+							blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
+							annotationObject: {
+								"@context": "https://schema.org",
+								type: "DigitalDocument",
+								name: "bill-of-lading"
+							},
+							dateCreated: "2024-08-22T04:13:20.000Z",
+							nodeIdentity:
+								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+							userIdentity:
+								"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858",
+							attestationId:
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg="
+						}
+					}
+				]
+			}
+		]);
+	});
+
+	test("can add a document to an AIG with alias", async () => {
+		const aigId = await auditableItemGraphComponent.create(
+			{},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		const service = new DocumentManagementService();
+		await service.set(
+			aigId,
+			"test-doc-id:aaa",
+			"my-format",
+			UneceDocumentCodes.BillOfLading,
+			Converter.utf8ToBytes("Hello World"),
+			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+			{
+				createAttestation: true,
+				includeIdAsAlias: true,
+				aliasAnnotationObject: {
+					"@context": ["https://schema.org"],
+					type: "DigitalDocument",
+					name: "foo"
+				}
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		const aigStore = vertexEntityStorage.getStore();
+		expect(aigStore).toEqual([
+			{
+				id: "5858585858585858585858585858585858585858585858585858585858585858",
+				nodeIdentity:
+					"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+				dateCreated: "2024-08-22T04:13:20.000Z",
+				dateModified: "2024-08-22T04:13:20.000Z",
+				aliases: [
+					{
+						id: "test-doc-id:aaa",
+						aliasFormat: "my-format",
+						dateCreated: "2024-08-22T04:13:20.000Z",
+						annotationObject: {
+							"@context": ["https://schema.org"],
+							type: "DigitalDocument",
+							name: "foo"
+						}
+					}
+				],
+				resources: [
+					{
+						dateCreated: "2024-08-22T04:13:20.000Z",
+						resourceObject: {
+							"@context": [
+								"https://schema.twindev.org/documents/",
+								"https://schema.twindev.org/common/",
+								"https://schema.org"
+							],
+							type: "Document",
+							id: "documents:705:test-doc-id:aaa:rev-0",
+							documentId: "test-doc-id:aaa",
+							documentIdFormat: "my-format",
+							documentCode: "unece:DocumentCodeList#705",
+							documentRevision: 0,
+							blobStorageId:
+								"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
+							blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
+							annotationObject: {
+								"@context": "https://schema.org",
+								type: "DigitalDocument",
+								name: "bill-of-lading"
+							},
+							dateCreated: "2024-08-22T04:13:20.000Z",
+							nodeIdentity:
+								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+							userIdentity:
+								"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858",
+							attestationId:
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg="
+						}
+					}
+				],
+				aliasIndex: "test-doc-id:aaa"
+			}
+		]);
 	});
 
 	test("can update a documents annotation object without creating a new revision", async () => {
@@ -236,7 +366,15 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true,
+				includeIdAsAlias: true,
+				aliasAnnotationObject: {
+					"@context": ["https://schema.org"],
+					type: "DigitalDocument",
+					name: "foo"
+				}
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -252,7 +390,15 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading-2" },
-			true,
+			{
+				createAttestation: true,
+				includeIdAsAlias: true,
+				aliasAnnotationObject: {
+					"@context": ["https://schema.org"],
+					type: "DigitalDocument",
+					name: "bar"
+				}
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -260,6 +406,64 @@ describe("document-management-service", async () => {
 		const doc2 = await service.get(aigId, documentId, { maxRevisionCount: 100 });
 		expect(doc2.annotationObject?.name).toEqual("bill-of-lading-2");
 		expect(doc2.revisions).toBeUndefined();
+
+		const aigStore = vertexEntityStorage.getStore();
+		expect(aigStore).toEqual([
+			{
+				id: "5858585858585858585858585858585858585858585858585858585858585858",
+				nodeIdentity:
+					"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+				dateCreated: "2024-08-22T04:13:20.000Z",
+				dateModified: "2024-08-22T04:13:20.000Z",
+				aliases: [
+					{
+						id: "test-doc-id:aaa",
+						dateCreated: "2024-08-22T04:13:20.000Z",
+						annotationObject: {
+							"@context": ["https://schema.org"],
+							type: "DigitalDocument",
+							name: "bar"
+						},
+						dateModified: "2024-08-22T04:13:20.000Z"
+					}
+				],
+				resources: [
+					{
+						dateCreated: "2024-08-22T04:13:20.000Z",
+						resourceObject: {
+							"@context": [
+								"https://schema.twindev.org/documents/",
+								"https://schema.twindev.org/common/",
+								"https://schema.org"
+							],
+							type: "Document",
+							id: "documents:705:test-doc-id:aaa:rev-0",
+							documentId: "test-doc-id:aaa",
+							documentCode: "unece:DocumentCodeList#705",
+							documentRevision: 0,
+							blobStorageId:
+								"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
+							blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
+							annotationObject: {
+								"@context": "https://schema.org",
+								type: "DigitalDocument",
+								name: "bill-of-lading-2"
+							},
+							dateCreated: "2024-08-22T04:13:20.000Z",
+							nodeIdentity:
+								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+							userIdentity:
+								"did:entity-storage:0x5858585858585858585858585858585858585858585858585858585858585858",
+							attestationId:
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg1ODU4NTg=",
+							dateModified: "2024-08-22T04:13:20.000Z"
+						},
+						dateModified: "2024-08-22T04:13:20.000Z"
+					}
+				],
+				aliasIndex: "test-doc-id:aaa"
+			}
+		]);
 	});
 
 	test("can update a documents blob data and create a new revision", async () => {
@@ -277,7 +481,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -293,7 +499,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World2"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -312,7 +520,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes("Hello World"),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				true,
+				{
+					createAttestation: true
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			)
@@ -345,7 +555,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes("Hello World"),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				true,
+				{
+					createAttestation: true
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			)
@@ -378,7 +590,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -435,7 +649,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -502,7 +718,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -570,7 +788,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			true,
+			{
+				createAttestation: true
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -664,7 +884,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -700,7 +922,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -750,7 +974,9 @@ describe("document-management-service", async () => {
 			UneceDocumentCodes.BillOfLading,
 			Converter.utf8ToBytes("Hello World"),
 			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-			false,
+			{
+				createAttestation: false
+			},
 			TEST_USER_IDENTITY,
 			TEST_NODE_IDENTITY
 		);
@@ -806,7 +1032,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -859,7 +1087,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -916,7 +1146,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -930,7 +1162,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.Certificate,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "cert" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -968,7 +1202,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -982,7 +1218,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.AccountingStatement,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "statement" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -996,7 +1234,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.Certificate,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "cert" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -1034,7 +1274,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -1048,7 +1290,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.AccountingStatement,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "statement" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -1062,7 +1306,9 @@ describe("document-management-service", async () => {
 				UneceDocumentCodes.Certificate,
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "cert" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);
@@ -1103,7 +1349,9 @@ describe("document-management-service", async () => {
 				docCodes[i],
 				Converter.utf8ToBytes(`Hello World${i}`),
 				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
-				false,
+				{
+					createAttestation: false
+				},
 				TEST_USER_IDENTITY,
 				TEST_NODE_IDENTITY
 			);

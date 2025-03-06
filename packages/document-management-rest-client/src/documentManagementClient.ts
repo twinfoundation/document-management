@@ -59,7 +59,10 @@ export class DocumentManagementClient
 	 * @param documentCode The code for the document type.
 	 * @param blob The data to create the document.
 	 * @param annotationObject Additional information to associate with the document.
-	 * @param createAttestation Flag to create an attestation for the document, defaults to false.
+	 * @param options Additional options for the set operation.
+	 * @param options.createAttestation Flag to create an attestation for the document, defaults to false.
+	 * @param options.includeIdAsAlias Include the document id as an alias to the aig vertex, defaults to false.
+	 * @param options.aliasAnnotationObject Additional information to associate with the alias.
 	 * @returns The identifier for the document which includes the auditable item graph identifier.
 	 */
 	public async set(
@@ -69,7 +72,11 @@ export class DocumentManagementClient
 		documentCode: UneceDocumentCodes,
 		blob: Uint8Array,
 		annotationObject?: IJsonLdNodeObject,
-		createAttestation?: boolean
+		options?: {
+			createAttestation?: boolean;
+			includeIdAsAlias?: boolean;
+			aliasAnnotationObject?: IJsonLdNodeObject;
+		}
 	): Promise<string> {
 		Guards.stringValue(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
 		Guards.stringValue(this.CLASS_NAME, nameof(documentId), documentId);
@@ -94,7 +101,9 @@ export class DocumentManagementClient
 					documentCode,
 					blob: Converter.bytesToBase64(blob),
 					annotationObject,
-					createAttestation
+					createAttestation: options?.createAttestation,
+					includeIdAsAlias: options?.includeIdAsAlias,
+					aliasAnnotationObject: options?.aliasAnnotationObject
 				}
 			}
 		);
