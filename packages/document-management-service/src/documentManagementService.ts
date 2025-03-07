@@ -1,14 +1,15 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IAttestationComponent } from "@twin.org/attestation-models";
-import { AttestationTypes } from "@twin.org/attestation-models";
+import { AttestationContexts } from "@twin.org/attestation-models";
 import {
+	AuditableItemGraphContexts,
 	AuditableItemGraphTypes,
 	type IAuditableItemGraphComponent,
 	type IAuditableItemGraphVertex
 } from "@twin.org/auditable-item-graph-models";
 import type { IBlobStorageComponent } from "@twin.org/blob-storage-models";
-import { BlobStorageTypes } from "@twin.org/blob-storage-models";
+import { BlobStorageContexts } from "@twin.org/blob-storage-models";
 import {
 	BaseError,
 	Coerce,
@@ -24,14 +25,15 @@ import {
 import { Sha256 } from "@twin.org/crypto";
 import { JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import {
+	DocumentContexts,
 	DocumentTypes,
-	type IDocumentAttestation,
 	type IDocument,
+	type IDocumentAttestation,
 	type IDocumentList,
 	type IDocumentManagementComponent
 } from "@twin.org/document-management-models";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgDataTypes, SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts, SchemaOrgDataTypes } from "@twin.org/standards-schema-org";
 import { UneceDocumentCodes } from "@twin.org/standards-unece";
 import type { IDocumentManagementServiceConstructorOptions } from "./models/IDocumentManagementStorageServiceConstructorOptions";
 
@@ -149,7 +151,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 					found.aliasFormat = documentIdFormat ?? found.aliasFormat;
 				} else {
 					vertex.aliases.push({
-						"@context": AuditableItemGraphTypes.ContextRoot,
+						"@context": AuditableItemGraphContexts.ContextRoot,
 						type: AuditableItemGraphTypes.Alias,
 						id: documentId,
 						aliasFormat: documentIdFormat,
@@ -222,9 +224,9 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			// to determine the next revision number.
 			const document: IDocument & IJsonLdNodeObject = {
 				"@context": [
-					DocumentTypes.ContextRoot,
-					DocumentTypes.ContextRootCommon,
-					SchemaOrgTypes.ContextRoot
+					DocumentContexts.ContextRoot,
+					DocumentContexts.ContextRootCommon,
+					SchemaOrgContexts.ContextRoot
 				],
 				type: DocumentTypes.Document,
 				id: this.createIdentifier(documentCode, documentId, documentRevision),
@@ -247,7 +249,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 
 			// Add the new revision in to the AIG
 			vertex.resources.push({
-				"@context": AuditableItemGraphTypes.ContextRoot,
+				"@context": AuditableItemGraphContexts.ContextRoot,
 				type: AuditableItemGraphTypes.Resource,
 				resourceObject: document
 			});
@@ -490,9 +492,9 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 
 			const docList: IDocumentList = {
 				"@context": [
-					DocumentTypes.ContextRoot,
-					DocumentTypes.ContextRootCommon,
-					SchemaOrgTypes.ContextRoot
+					DocumentContexts.ContextRoot,
+					DocumentContexts.ContextRootCommon,
+					SchemaOrgContexts.ContextRoot
 				],
 				type: DocumentTypes.DocumentList,
 				documents: finalDocs,
@@ -711,13 +713,13 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				nodeIdentity
 			);
 			document.blobStorageEntry = blobEntry;
-			document["@context"].push(BlobStorageTypes.ContextRoot);
+			document["@context"].push(BlobStorageContexts.ContextRoot);
 		}
 
 		if (options.includeAttestation && Is.stringValue(document.attestationId)) {
 			const attestationInformation = await this._attestationComponent.get(document.attestationId);
 			document.attestationInformation = attestationInformation;
-			document["@context"].push(AttestationTypes.ContextRoot);
+			document["@context"].push(AttestationContexts.ContextRoot);
 		}
 
 		document.revisions = Is.arrayValue(revisions) ? revisions : undefined;
@@ -740,9 +742,9 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	): Promise<string> {
 		const documentAttestation: IDocumentAttestation & IJsonLdNodeObject = {
 			"@context": [
-				DocumentTypes.ContextRoot,
-				DocumentTypes.ContextRootCommon,
-				SchemaOrgTypes.ContextRoot
+				DocumentContexts.ContextRoot,
+				DocumentContexts.ContextRootCommon,
+				SchemaOrgContexts.ContextRoot
 			],
 			type: DocumentTypes.DocumentAttestation,
 			documentId: document.documentId,

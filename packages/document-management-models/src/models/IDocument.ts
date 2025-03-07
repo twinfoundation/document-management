@@ -3,9 +3,10 @@
 import type { IAttestationInformation } from "@twin.org/attestation-models";
 import type { IBlobStorageEntry } from "@twin.org/blob-storage-models";
 import type { IJsonLdContextDefinitionElement, IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import type { SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import type { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import type { UneceDocumentCodes } from "@twin.org/standards-unece";
-import type { DocumentTypes } from "./documentDataTypes";
+import type { DocumentContexts } from "./documentContexts";
+import type { DocumentTypes } from "./documentTypes";
 
 /**
  * Interface describing a document.
@@ -15,9 +16,9 @@ export interface IDocument {
 	 * JSON-LD Context.
 	 */
 	"@context": [
-		typeof DocumentTypes.ContextRoot,
-		typeof DocumentTypes.ContextRootCommon,
-		typeof SchemaOrgTypes.ContextRoot,
+		typeof DocumentContexts.ContextRoot,
+		typeof DocumentContexts.ContextRootCommon,
+		typeof SchemaOrgContexts.ContextRoot,
 		...IJsonLdContextDefinitionElement[]
 	];
 

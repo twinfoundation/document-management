@@ -1,8 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import type { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import type { UneceDocumentCodes } from "@twin.org/standards-unece";
-import type { DocumentTypes } from "./documentDataTypes";
+import type { DocumentContexts } from "./documentContexts";
+import type { DocumentTypes } from "./documentTypes";
 
 /**
  * Interface describing a document attestation.
@@ -12,9 +13,9 @@ export interface IDocumentAttestation {
 	 * JSON-LD Context.
 	 */
 	"@context": [
-		typeof DocumentTypes.ContextRoot,
-		typeof DocumentTypes.ContextRootCommon,
-		typeof SchemaOrgTypes.ContextRoot
+		typeof DocumentContexts.ContextRoot,
+		typeof DocumentContexts.ContextRootCommon,
+		typeof SchemaOrgContexts.ContextRoot
 	];
 
 	/**

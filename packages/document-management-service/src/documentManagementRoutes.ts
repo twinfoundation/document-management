@@ -11,6 +11,7 @@ import {
 } from "@twin.org/api-models";
 import { Coerce, ComponentFactory, Converter, Guards } from "@twin.org/core";
 import {
+	DocumentContexts,
 	DocumentTypes,
 	type IDocumentManagementComponent,
 	type IDocumentManagementGetRequest,
@@ -21,7 +22,7 @@ import {
 	type IDocumentManagementSetRequest
 } from "@twin.org/document-management-models";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgTypes } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
 import { UneceDocumentCodes } from "@twin.org/standards-unece";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 
@@ -136,9 +137,9 @@ export function generateRestRoutesDocumentManagement(
 						response: {
 							body: {
 								"@context": [
-									DocumentTypes.ContextRoot,
-									DocumentTypes.ContextRootCommon,
-									SchemaOrgTypes.ContextRoot
+									DocumentContexts.ContextRoot,
+									DocumentContexts.ContextRootCommon,
+									SchemaOrgContexts.ContextRoot
 								],
 								type: DocumentTypes.Document,
 								id: "documents:705:2721000:rev-0",
@@ -173,9 +174,9 @@ export function generateRestRoutesDocumentManagement(
 						response: {
 							body: {
 								"@context": [
-									DocumentTypes.ContextRoot,
-									DocumentTypes.ContextRootCommon,
-									SchemaOrgTypes.ContextRoot
+									DocumentContexts.ContextRoot,
+									DocumentContexts.ContextRootCommon,
+									SchemaOrgContexts.ContextRoot
 								],
 								type: DocumentTypes.Document,
 								id: "documents:705:2721000:rev-0",
@@ -274,14 +275,14 @@ export function generateRestRoutesDocumentManagement(
 						id: "DocumentManagementQueryResponseExample",
 						response: {
 							body: {
-								"@context": [DocumentTypes.ContextRoot, DocumentTypes.ContextRootCommon],
+								"@context": [DocumentContexts.ContextRoot, DocumentContexts.ContextRootCommon],
 								type: DocumentTypes.DocumentList,
 								documents: [
 									{
 										"@context": [
-											DocumentTypes.ContextRoot,
-											DocumentTypes.ContextRootCommon,
-											SchemaOrgTypes.ContextRoot
+											DocumentContexts.ContextRoot,
+											DocumentContexts.ContextRootCommon,
+											SchemaOrgContexts.ContextRoot
 										],
 										type: DocumentTypes.Document,
 										id: "documents:705:2721000:rev-0",
@@ -317,14 +318,14 @@ export function generateRestRoutesDocumentManagement(
 						id: "DocumentManagementListResponseJsonLdExample",
 						response: {
 							body: {
-								"@context": [DocumentTypes.ContextRoot, DocumentTypes.ContextRootCommon],
+								"@context": [DocumentContexts.ContextRoot, DocumentContexts.ContextRootCommon],
 								type: DocumentTypes.DocumentList,
 								documents: [
 									{
 										"@context": [
-											DocumentTypes.ContextRoot,
-											DocumentTypes.ContextRootCommon,
-											SchemaOrgTypes.ContextRoot
+											DocumentContexts.ContextRoot,
+											DocumentContexts.ContextRootCommon,
+											SchemaOrgContexts.ContextRoot
 										],
 										type: DocumentTypes.Document,
 										id: "documents:705:2721000:rev-0",
