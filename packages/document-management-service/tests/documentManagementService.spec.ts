@@ -18,9 +18,9 @@ import { BackgroundTaskConnectorFactory } from "@twin.org/background-task-models
 import { MemoryBlobStorageConnector } from "@twin.org/blob-storage-connector-memory";
 import { BlobStorageConnectorFactory } from "@twin.org/blob-storage-models";
 import {
+	type BlobStorageEntry,
 	BlobStorageService,
-	initSchema as initSchemaBlobStorage,
-	type BlobStorageEntry
+	initSchema as initSchemaBlobStorage
 } from "@twin.org/blob-storage-service";
 import { ComponentFactory, Converter } from "@twin.org/core";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
@@ -30,13 +30,8 @@ import {
 	ImmutableProofService,
 	initSchema as initSchemaImmutableProof
 } from "@twin.org/immutable-proof-service";
-import {
-	EntityStorageImmutableStorageConnector,
-	type ImmutableItem,
-	initSchema as initSchemaImmutableStorage
-} from "@twin.org/immutable-storage-connector-entity-storage";
-import { ImmutableStorageConnectorFactory } from "@twin.org/immutable-storage-models";
 import { ModuleHelper } from "@twin.org/modules";
+import { nameof } from "@twin.org/nameof";
 import {
 	EntityStorageNftConnector,
 	initSchema as initSchemaNft,
@@ -44,11 +39,17 @@ import {
 } from "@twin.org/nft-connector-entity-storage";
 import { NftConnectorFactory } from "@twin.org/nft-models";
 import { UneceDocumentCodes } from "@twin.org/standards-unece";
+import {
+	EntityStorageVerifiableStorageConnector,
+	initSchema as initSchemaVerifiableStorage,
+	type VerifiableItem
+} from "@twin.org/verifiable-storage-connector-entity-storage";
+import { VerifiableStorageConnectorFactory } from "@twin.org/verifiable-storage-models";
 import { setupTestEnv, TEST_NODE_IDENTITY, TEST_USER_IDENTITY } from "./setupTestEnv";
 import { DocumentManagementService } from "../src/documentManagementService";
 
-let immutableItemEntityStorage: MemoryEntityStorageConnector<ImmutableItem>;
-let immutableStorageConnector: EntityStorageImmutableStorageConnector;
+let verifiableItemEntityStorage: MemoryEntityStorageConnector<VerifiableItem>;
+let verifiableStorageConnector: EntityStorageVerifiableStorageConnector;
 let immutableProofEntityStorage: MemoryEntityStorageConnector<ImmutableProof>;
 let immutableProofComponent: ImmutableProofService;
 let nftEntityStorage: MemoryEntityStorageConnector<Nft>;
@@ -70,20 +71,23 @@ describe("document-management-service", async () => {
 	});
 
 	beforeEach(async () => {
-		initSchemaImmutableStorage();
+		initSchemaVerifiableStorage();
 		initSchemaImmutableProof();
 		initSchemaBackgroundTask();
 		initSchemaAuditableItemGraph();
 		initSchemaNft();
 		initSchemaBlobStorage();
 
-		immutableItemEntityStorage = new MemoryEntityStorageConnector({
-			entitySchema: "ImmutableItem"
+		verifiableItemEntityStorage = new MemoryEntityStorageConnector({
+			entitySchema: nameof<VerifiableItem>()
 		});
-		EntityStorageConnectorFactory.register("immutable-item", () => immutableItemEntityStorage);
+		EntityStorageConnectorFactory.register("verifiable-item", () => verifiableItemEntityStorage);
 
-		immutableStorageConnector = new EntityStorageImmutableStorageConnector();
-		ImmutableStorageConnectorFactory.register("immutable-storage", () => immutableStorageConnector);
+		verifiableStorageConnector = new EntityStorageVerifiableStorageConnector();
+		VerifiableStorageConnectorFactory.register(
+			"verifiable-storage",
+			() => verifiableStorageConnector
+		);
 
 		backgroundTaskStorage = new MemoryEntityStorageConnector<BackgroundTask>({
 			entitySchema: "BackgroundTask"
