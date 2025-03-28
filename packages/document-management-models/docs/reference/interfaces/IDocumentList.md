@@ -1,6 +1,6 @@
 # Interface: IDocumentList
 
-Interface describing a document entry list.
+Interface describing a list of document entries.
 
 ## Properties
 

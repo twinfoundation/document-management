@@ -42,5 +42,5 @@
 		"documents"
 	],
 	"additionalProperties": false,
-	"description": "Interface describing a document entry list."
+	"description": "Interface describing a list of document entries."
 }

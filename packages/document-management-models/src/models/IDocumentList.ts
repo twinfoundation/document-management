@@ -6,7 +6,7 @@ import type { DocumentTypes } from "./documentTypes";
 import type { IDocument } from "./IDocument";
 
 /**
- * Interface describing a document entry list.
+ * Interface describing a list of document entries.
  */
 export interface IDocumentList {
 	/**
