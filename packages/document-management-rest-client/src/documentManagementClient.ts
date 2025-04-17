@@ -1,24 +1,24 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
-import {
-	HttpParameterHelper,
-	type IBaseRestClientConfig,
-	type ICreatedResponse,
-	type INoContentResponse
+import type {
+	IBaseRestClientConfig,
+	ICreatedResponse,
+	INoContentResponse
 } from "@twin.org/api-models";
-import { Converter, Guards, Is, Urn } from "@twin.org/core";
+import type { IAuditableItemGraphVertexList } from "@twin.org/auditable-item-graph-models";
+import { Coerce, Converter, Guards, Is, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type {
-	IDocument,
 	IDocumentList,
 	IDocumentManagementComponent,
+	IDocumentManagementCreateRequest,
 	IDocumentManagementGetRequest,
 	IDocumentManagementGetResponse,
 	IDocumentManagementQueryRequest,
 	IDocumentManagementQueryResponse,
 	IDocumentManagementRemoveRequest,
-	IDocumentManagementSetRequest
+	IDocumentManagementUpdateRequest
 } from "@twin.org/document-management-models";
 import { nameof } from "@twin.org/nameof";
 import { UneceDocumentCodes } from "@twin.org/standards-unece";
@@ -50,35 +50,38 @@ export class DocumentManagementClient
 	}
 
 	/**
-	 * Store a document in an auditable item graph vertex and add its content to blob storage.
+	 * Store a document as an auditable item graph vertex and add its content to blob storage.
 	 * If the document id already exists and the blob data is different a new revision will be created.
 	 * For any other changes the current revision will be updated.
-	 * @param auditableItemGraphId The auditable item graph vertex id to create the document on.
 	 * @param documentId The document id to create.
 	 * @param documentIdFormat The format of the document identifier.
 	 * @param documentCode The code for the document type.
-	 * @param blob The data to create the document.
+	 * @param blob The data to create the document with.
 	 * @param annotationObject Additional information to associate with the document.
+	 * @param auditableItemGraphEdges The auditable item graph vertices to connect the document to.
 	 * @param options Additional options for the set operation.
 	 * @param options.createAttestation Flag to create an attestation for the document, defaults to false.
-	 * @param options.includeIdAsAlias Include the document id as an alias to the aig vertex, defaults to false.
-	 * @param options.aliasAnnotationObject Additional information to associate with the alias.
-	 * @returns The identifier for the document which includes the auditable item graph identifier.
+	 * @param options.addAlias Flag to add the document id as an alias to the aig vertex, defaults to true.
+	 * @param options.aliasAnnotationObject Annotation object for the alias.
+	 * @returns The auditable item graph vertex created for the document including its revision.
 	 */
-	public async set(
-		auditableItemGraphId: string,
+	public async create(
 		documentId: string,
 		documentIdFormat: string | undefined,
 		documentCode: UneceDocumentCodes,
 		blob: Uint8Array,
 		annotationObject?: IJsonLdNodeObject,
+		auditableItemGraphEdges?: {
+			id: string;
+			addAlias?: boolean;
+			aliasAnnotationObject?: IJsonLdNodeObject;
+		}[],
 		options?: {
 			createAttestation?: boolean;
-			includeIdAsAlias?: boolean;
+			addAlias?: boolean;
 			aliasAnnotationObject?: IJsonLdNodeObject;
 		}
 	): Promise<string> {
-		Guards.stringValue(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
 		Guards.stringValue(this.CLASS_NAME, nameof(documentId), documentId);
 		Guards.arrayOneOf(
 			this.CLASS_NAME,
@@ -88,21 +91,19 @@ export class DocumentManagementClient
 		);
 		Guards.uint8Array(this.CLASS_NAME, nameof(blob), blob);
 
-		const response = await this.fetch<IDocumentManagementSetRequest, ICreatedResponse>(
-			"/:auditableItemGraphId",
+		const response = await this.fetch<IDocumentManagementCreateRequest, ICreatedResponse>(
+			"/",
 			"POST",
 			{
-				pathParams: {
-					auditableItemGraphId
-				},
 				body: {
 					documentId,
 					documentIdFormat,
 					documentCode,
 					blob: Converter.bytesToBase64(blob),
 					annotationObject,
+					auditableItemGraphEdges,
 					createAttestation: options?.createAttestation,
-					includeIdAsAlias: options?.includeIdAsAlias,
+					addAlias: options?.addAlias,
 					aliasAnnotationObject: options?.aliasAnnotationObject
 				}
 			}
@@ -112,48 +113,82 @@ export class DocumentManagementClient
 	}
 
 	/**
-	 * Get a specific document from an auditable item graph vertex.
-	 * @param auditableItemGraphId The auditable item graph vertex id to get the document from.
-	 * @param identifier The identifier of the document to get.
+	 * Update a document as an auditable item graph vertex and add its content to blob storage.
+	 * If the blob data is different a new revision will be created.
+	 * For any other changes the current revision will be updated.
+	 * @param auditableItemGraphDocumentId The auditable item graph vertex id which contains the document.
+	 * @param blob The data to update the document with.
+	 * @param annotationObject Additional information to associate with the document.
+	 * @param auditableItemGraphEdges The auditable item graph vertices to connect the document to, if undefined retains current connections.
+	 * @returns Nothing.
+	 */
+	public async update(
+		auditableItemGraphDocumentId: string,
+		blob?: Uint8Array,
+		annotationObject?: IJsonLdNodeObject,
+		auditableItemGraphEdges?: {
+			id: string;
+			addAlias?: boolean;
+			aliasAnnotationObject?: IJsonLdNodeObject;
+		}[]
+	): Promise<void> {
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphDocumentId), auditableItemGraphDocumentId);
+
+		await this.fetch<IDocumentManagementUpdateRequest, INoContentResponse>(
+			"/:auditableItemGraphDocumentId",
+			"PUT",
+			{
+				pathParams: {
+					auditableItemGraphDocumentId
+				},
+				body: {
+					blob: Is.uint8Array(blob) ? Converter.bytesToBase64(blob) : undefined,
+					annotationObject,
+					auditableItemGraphEdges
+				}
+			}
+		);
+	}
+
+	/**
+	 * Get a document using it's auditable item graph vertex id and optional revision.
+	 * @param auditableItemGraphDocumentId The auditable item graph vertex id which contains the document.
 	 * @param options Additional options for the get operation.
 	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
 	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
 	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
 	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
-	 * @param options.maxRevisionCount Max number of revisions to return, defaults to 0.
-	 * @param revisionCursor The cursor to get the next chunk of revisions.
+	 * @param cursor The cursor to get the next chunk of revisions.
+	 * @param pageSize Page size of items to return, defaults to 1 so only most recent is returned.
 	 * @returns The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
 	 */
 	public async get(
-		auditableItemGraphId: string,
-		identifier: string,
+		auditableItemGraphDocumentId: string,
 		options?: {
 			includeBlobStorageMetadata?: boolean;
 			includeBlobStorageData?: boolean;
 			includeAttestation?: boolean;
 			includeRemoved?: boolean;
-			maxRevisionCount?: number;
 		},
-		revisionCursor?: string
-	): Promise<IDocument> {
-		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
-		Urn.guard(this.CLASS_NAME, nameof(identifier), identifier);
+		cursor?: string,
+		pageSize?: number
+	): Promise<IDocumentList> {
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphDocumentId), auditableItemGraphDocumentId);
 
 		const response = await this.fetch<
 			IDocumentManagementGetRequest,
 			IDocumentManagementGetResponse
-		>("/:auditableItemGraphId/:documentId", "GET", {
+		>("/:auditableItemGraphDocumentId", "GET", {
 			pathParams: {
-				auditableItemGraphId,
-				documentId: identifier
+				auditableItemGraphDocumentId
 			},
 			query: {
 				includeBlobStorageMetadata: options?.includeBlobStorageMetadata,
 				includeBlobStorageData: options?.includeBlobStorageData,
 				includeAttestation: options?.includeAttestation,
 				includeRemoved: options?.includeRemoved,
-				maxRevisionCount: options?.maxRevisionCount,
-				revisionCursor
+				cursor,
+				pageSize: Coerce.string(pageSize)
 			}
 		});
 
@@ -161,72 +196,53 @@ export class DocumentManagementClient
 	}
 
 	/**
-	 * Remove a specific document from an auditable item graph vertex.
-	 * The documents dateDeleted will be set, but can still be queried with the includeRemoved flag.
-	 * @param auditableItemGraphId The auditable item graph vertex id to remove the document from.
-	 * @param identifier The identifier of the document to remove.
-	 * @param options Additional options for the remove operation.
-	 * @param options.removeAllRevisions Flag to remove all revisions of the document, defaults to false.
+	 * Remove an auditable item graph vertex using it's id.
+	 * The document dateDeleted will be set, but can still be queried with the includeRemoved flag.
+	 * @param auditableItemGraphDocumentId The auditable item graph vertex id which contains the document.
+	 * @param revision The revision of the document to remove.
 	 * @returns Nothing.
 	 */
-	public async remove(
-		auditableItemGraphId: string,
-		identifier: string,
-		options?: { removeAllRevisions?: boolean }
+	public async removeRevision(
+		auditableItemGraphDocumentId: string,
+		revision: number
 	): Promise<void> {
-		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
-		Urn.guard(this.CLASS_NAME, nameof(identifier), identifier);
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphDocumentId), auditableItemGraphDocumentId);
+		Guards.number(this.CLASS_NAME, nameof(revision), revision);
 
 		await this.fetch<IDocumentManagementRemoveRequest, INoContentResponse>(
-			"/:auditableItemGraphId/:documentId",
+			"/:auditableItemGraphDocumentId/:revision",
 			"DELETE",
 			{
 				pathParams: {
-					auditableItemGraphId,
-					documentId: identifier
-				},
-				query: {
-					removeAllRevisions: options?.removeAllRevisions
+					auditableItemGraphDocumentId,
+					revision: revision.toString()
 				}
 			}
 		);
 	}
 
 	/**
-	 * Query an auditable item graph vertex for documents.
-	 * @param auditableItemGraphId The auditable item graph vertex to get the documents from.
-	 * @param documentCodes The document codes to query for, if undefined gets all document codes.
-	 * @param options Additional options for the query operation.
-	 * @param options.includeMostRecentRevisions Include the most recent 5 revisions, use the individual get to retrieve more.
-	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
+	 * Find all the document with a specific id.
+	 * @param documentId The document id to find in the graph.
 	 * @param cursor The cursor to get the next chunk of documents.
-	 * @returns The most recent revisions of each document, cursor is set if there are more documents.
+	 * @param pageSize The page size to get the next chunk of documents.
+	 * @returns The graph vertices that contain documents referencing the specified document id.
 	 */
 	public async query(
-		auditableItemGraphId: string,
-		documentCodes?: UneceDocumentCodes[],
-		options?: {
-			includeMostRecentRevisions?: boolean;
-			includeRemoved?: boolean;
-		},
-		cursor?: string
-	): Promise<IDocumentList> {
-		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphId), auditableItemGraphId);
+		documentId: string,
+		cursor?: string,
+		pageSize?: number
+	): Promise<IAuditableItemGraphVertexList> {
+		Guards.stringValue(this.CLASS_NAME, nameof(documentId), documentId);
 
 		const response = await this.fetch<
 			IDocumentManagementQueryRequest,
 			IDocumentManagementQueryResponse
-		>("/:auditableItemGraphId", "GET", {
-			pathParams: {
-				auditableItemGraphId
-			},
+		>("/", "GET", {
 			query: {
-				documentCodes: Is.arrayValue(documentCodes)
-					? HttpParameterHelper.arrayToString(documentCodes)
-					: undefined,
-				includeMostRecentRevisions: options?.includeMostRecentRevisions,
-				includeRemoved: options?.includeRemoved,
-				cursor
+				documentId,
+				cursor,
+				pageSize: Coerce.string(pageSize)
 			}
 		});
 

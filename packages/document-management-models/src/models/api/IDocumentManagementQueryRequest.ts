@@ -14,39 +14,22 @@ export interface IDocumentManagementQueryRequest {
 	};
 
 	/**
-	 * The path parameters.
-	 */
-	pathParams: {
-		/**
-		 * The id of the auditable item graph vertex which contains the documents.
-		 */
-		auditableItemGraphId: string;
-	};
-
-	/**
 	 * The query parameters.
 	 */
-	query?: {
+	query: {
 		/**
-		 * List of comma separated document codes to filter the query.
+		 * The id of the document id we are trying to find.
 		 */
-		documentCodes?: string;
-
-		/**
-		 * Include deleted documents in the response.
-		 * @default false
-		 */
-		includeRemoved?: boolean;
-
-		/**
-		 * Include the most recent 5 revisions, use the individual get to retrieve more.
-		 * @default false
-		 */
-		includeMostRecentRevisions?: boolean;
+		documentId: string;
 
 		/**
 		 * The cursor to get the next chunk of documents.
 		 */
 		cursor?: string;
+
+		/**
+		 * The number of documents to return.
+		 */
+		pageSize?: string;
 	};
 }

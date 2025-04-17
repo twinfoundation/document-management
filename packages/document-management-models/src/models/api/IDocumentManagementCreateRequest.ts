@@ -4,19 +4,9 @@ import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { UneceDocumentCodes } from "@twin.org/standards-unece";
 
 /**
- * Request to set a document in an auditable item graph vertex.
+ * Request to create a document as an auditable item graph vertex.
  */
-export interface IDocumentManagementSetRequest {
-	/**
-	 * The path parameters.
-	 */
-	pathParams: {
-		/**
-		 * The id of the auditable item graph vertex to store the document on.
-		 */
-		auditableItemGraphId: string;
-	};
-
+export interface IDocumentManagementCreateRequest {
 	/**
 	 * The body parameters.
 	 */
@@ -47,17 +37,26 @@ export interface IDocumentManagementSetRequest {
 		annotationObject?: IJsonLdNodeObject;
 
 		/**
-		 * Flag to create an attestation for the document, defaults to false
+		 * The auditable item graph vertices to connect the document to.
+		 */
+		auditableItemGraphEdges?: {
+			id: string;
+			addAlias?: boolean;
+			aliasAnnotationObject?: IJsonLdNodeObject;
+		}[];
+
+		/**
+		 * Flag to create an attestation for the document, defaults to false.
 		 */
 		createAttestation?: boolean;
 
 		/**
-		 * Include the document id as an alias to the aig vertex, defaults to false.
+		 * Flag to add the document id as an alias to the aig vertex, defaults to true.
 		 */
-		includeIdAsAlias?: boolean;
+		addAlias?: boolean;
 
 		/**
-		 * Additional information to associate with the alias.
+		 * Annotation object for the alias.
 		 */
 		aliasAnnotationObject?: IJsonLdNodeObject;
 	};

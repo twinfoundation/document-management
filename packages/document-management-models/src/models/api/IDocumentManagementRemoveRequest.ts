@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Request to remove a document from an auditable item graph.
+ * Request to remove a document revision from an auditable item graph.
  */
 export interface IDocumentManagementRemoveRequest {
 	/**
@@ -10,24 +10,13 @@ export interface IDocumentManagementRemoveRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the auditable item graph vertex to remove the document from.
+		 * The id of the auditable item graph vertex to remove the revision from.
 		 */
-		auditableItemGraphId: string;
+		auditableItemGraphDocumentId: string;
 
 		/**
-		 * The full id of the document to remove.
+		 * The revision of the document to remove.
 		 */
-		documentId: string;
-	};
-
-	/**
-	 * The query parameters.
-	 */
-	query?: {
-		/**
-		 * Flag to remove all revisions of the document.
-		 * @default false
-		 */
-		removeAllRevisions?: boolean;
+		revision: string;
 	};
 }

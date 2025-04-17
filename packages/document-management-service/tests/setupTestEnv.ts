@@ -68,10 +68,10 @@ export let TEST_VAULT_KEY: string;
  * Setup the test environment.
  */
 export async function setupTestEnv(): Promise<void> {
+	let randCounter = 1;
 	RandomHelper.generate = vi
 		.fn()
-		.mockImplementationOnce(length => new Uint8Array(length).fill(99))
-		.mockImplementation(length => new Uint8Array(length).fill(88));
+		.mockImplementation(length => new Uint8Array(length).fill(randCounter++));
 	Bip39.randomMnemonic = vi
 		.fn()
 		.mockImplementation(
