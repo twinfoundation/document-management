@@ -106,14 +106,4 @@ export interface IDocument {
 	 * The user who added the document to the graph.
 	 */
 	userIdentity: string;
-
-	/**
-	 * The previous revisions of the document.
-	 */
-	revisions?: IDocument[];
-
-	/**
-	 * The cursor to get the next chunk of revisions.
-	 */
-	revisionCursor?: string;
 }

@@ -1,13 +1,13 @@
 {
 	"error": {
 		"documentManagementService": {
-			"setFailed": "Failed to set document",
+			"createFailed": "Failed to create document",
+			"updateFailed": "Failed to update document",
 			"getFailed": "Failed to get document",
-			"removeFailed": "Failed to remove document",
+			"removeRevision": "Failed to remove document revision",
 			"queryFailed": "Failed to query document",
-			"invalidDocumentId": "The document id not in the correct format, it is \"{identifier}\"",
-			"invalidDocumentCode": "The document code does not follow the format unece:DocumentCodeList#1, it is \"{documentCode}\"",
-			"documentRevisionNotFound": "The document revision was not found \"{identifier}\"",
+			"documentRevisionNone": "There are no revisions in the document",
+			"documentRevisionNotFound": "There is no revision number \"{revision}\" in the document",
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Document Management component \"{namespace}\""
 		}
 	}

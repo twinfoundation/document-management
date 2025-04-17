@@ -28,6 +28,14 @@ The list of documents.
 
 ***
 
+### edges?
+
+> `optional` **edges**: `string`[]
+
+The ids of the other vertices which are connected to the document.
+
+***
+
 ### cursor?
 
 > `optional` **cursor**: `string`

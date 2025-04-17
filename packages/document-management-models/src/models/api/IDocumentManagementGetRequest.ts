@@ -18,14 +18,9 @@ export interface IDocumentManagementGetRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the auditable item graph vertex to store the document on.
-		 */
-		auditableItemGraphId: string;
-
-		/**
 		 * The full id of the document to get.
 		 */
-		documentId: string;
+		auditableItemGraphDocumentId: string;
 	};
 
 	/**
@@ -57,14 +52,14 @@ export interface IDocumentManagementGetRequest {
 		includeRemoved?: boolean;
 
 		/**
-		 * Max number of revisions to return.
-		 * @default 0
+		 * Page size of items to return, defaults to 1 so only most recent is returned.
+		 * @default 1
 		 */
-		maxRevisionCount?: number;
+		pageSize?: string;
 
 		/**
 		 * The cursor to get the next chunk of revisions.
 		 */
-		revisionCursor?: string;
+		cursor?: string;
 	};
 }
