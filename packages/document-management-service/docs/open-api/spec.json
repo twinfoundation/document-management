@@ -21,7 +21,7 @@
 		}
 	],
 	"paths": {
-		"/documents": {
+		"/document-management": {
 			"post": {
 				"operationId": "DocumentManagementSet",
 				"summary": "Store a document in an auditable item graph vertex and add its content to blob storage.",
@@ -242,7 +242,7 @@
 				}
 			}
 		},
-		"/documents/{auditableItemGraphDocumentId}": {
+		"/document-management/{auditableItemGraphDocumentId}": {
 			"put": {
 				"operationId": "DocumentManagementUpdate",
 				"summary": "Update a document in an auditable item graph vertex and add its content to blob storage.",
@@ -609,7 +609,7 @@
 				}
 			}
 		},
-		"/documents/{auditableItemGraphDocumentId}/{revision}": {
+		"/document-management/{auditableItemGraphDocumentId}/{revision}": {
 			"delete": {
 				"operationId": "DocumentManagementRemove",
 				"summary": "Remove an document from an auditable item graph vertex",

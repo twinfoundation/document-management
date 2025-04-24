@@ -47,7 +47,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	/**
 	 * The namespace supported by the document management service.
 	 */
-	public static readonly NAMESPACE: string = "documents";
+	public static readonly NAMESPACE: string = "document-management";
 
 	/**
 	 * Runtime name for the class.
