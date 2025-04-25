@@ -182,6 +182,76 @@
 					}
 				],
 				"responses": {
+					"200": {
+						"description": "Response to query the documents from an auditable item graph vertex.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuditableItemGraphVertexList"
+								},
+								"examples": {
+									"DocumentManagementQueryResponseExample": {
+										"value": {
+											"@context": [
+												"https://schema.twindev.org/aig/"
+											],
+											"type": "AuditableItemGraphVertexList",
+											"vertices": [
+												{
+													"@context": [
+														"https://schema.twindev.org/aig/",
+														"https://schema.twindev.org/common/"
+													],
+													"id": "aig:c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7",
+													"type": "AuditableItemGraphVertex",
+													"dateCreated": "2024-08-22T04:13:20.000Z",
+													"aliases": [
+														{
+															"@context": [
+																"https://schema.twindev.org/aig/"
+															],
+															"id": "test-id-0",
+															"type": "AuditableItemGraphAlias",
+															"dateCreated": "2024-08-22T04:13:20.000Z"
+														}
+													],
+													"resources": [
+														{
+															"@context": "https://schema.twindev.org/aig/",
+															"type": "AuditableItemGraphResource",
+															"dateCreated": "2024-08-22T04:13:20.000Z",
+															"resourceObject": {
+																"@context": [
+																	"https://schema.twindev.org/documents/",
+																	"https://schema.twindev.org/common/",
+																	"https://schema.org"
+																],
+																"type": "Document",
+																"id": "test-id-0:0",
+																"documentId": "test-id-0",
+																"documentCode": "unece:DocumentCodeList#705",
+																"documentRevision": 0,
+																"annotationObject": {
+																	"@context": "https://schema.org",
+																	"type": "DigitalDocument",
+																	"name": "bill-of-lading"
+																},
+																"blobHash": "sha256:E3Duqrp6bHojSx+CzDttAToAiP1eFkCDAPBbKLABVGM=",
+																"blobStorageId": "blob:memory:1370eeaaba7a6c7a234b1f82cc3b6d013a0088fd5e16408300f05b28b0015463",
+																"dateCreated": "2024-08-22T04:13:20.000Z",
+																"nodeIdentity": "did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
+																"userIdentity": "did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404"
+															}
+														}
+													]
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					},
 					"400": {
 						"description": "The server cannot process the request, see the content for more details.",
 						"content": {
@@ -809,6 +879,458 @@
 				"additionalProperties": false,
 				"description": "Interface describing the collated attestation information."
 			},
+			"AuditableItemGraphAlias": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The id of the element."
+					},
+					"dateCreated": {
+						"type": "string",
+						"description": "The date/time of when the element was created."
+					},
+					"dateModified": {
+						"type": "string",
+						"description": "The date/time of when the element was modified."
+					},
+					"dateDeleted": {
+						"type": "string",
+						"description": "The date/time of when the element was deleted, as we never actually remove items."
+					},
+					"@context": {
+						"anyOf": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "array",
+								"minItems": 1,
+								"items": [
+									{
+										"type": "string",
+										"const": "https://schema.twindev.org/aig/"
+									}
+								],
+								"additionalItems": {
+									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+								}
+							}
+						],
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphAlias",
+						"description": "JSON-LD Type."
+					},
+					"annotationObject": {
+						"$ref": "#/components/schemas/JsonLdNodeObject"
+					},
+					"aliasFormat": {
+						"type": "string",
+						"description": "The format of the id in the alias."
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an alias for a vertex."
+			},
+			"AuditableItemGraphChangeset": {
+				"type": "object",
+				"properties": {
+					"@context": {
+						"type": "array",
+						"minItems": 2,
+						"items": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/common/"
+							}
+						],
+						"additionalItems": {
+							"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+						},
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphChangeset",
+						"description": "JSON-LD Type."
+					},
+					"id": {
+						"type": "string",
+						"description": "The id of the changeset."
+					},
+					"dateCreated": {
+						"type": "string",
+						"description": "The date/time of when the changeset was created."
+					},
+					"userIdentity": {
+						"type": "string",
+						"description": "The user identity that created the changes."
+					},
+					"patches": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AuditableItemGraphPatchOperation"
+						},
+						"description": "The patches in the changeset."
+					},
+					"proofId": {
+						"type": "string",
+						"description": "The immutable proof id which contains the signature for this changeset."
+					},
+					"verification": {
+						"$ref": "#/components/schemas/ImmutableProofVerification"
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"id",
+					"dateCreated",
+					"userIdentity",
+					"patches"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing a set of changes to the vertex."
+			},
+			"AuditableItemGraphEdge": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The id of the element."
+					},
+					"dateCreated": {
+						"type": "string",
+						"description": "The date/time of when the element was created."
+					},
+					"dateModified": {
+						"type": "string",
+						"description": "The date/time of when the element was modified."
+					},
+					"dateDeleted": {
+						"type": "string",
+						"description": "The date/time of when the element was deleted, as we never actually remove items."
+					},
+					"@context": {
+						"anyOf": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "array",
+								"minItems": 1,
+								"items": [
+									{
+										"type": "string",
+										"const": "https://schema.twindev.org/aig/"
+									}
+								],
+								"additionalItems": {
+									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+								}
+							}
+						],
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphEdge",
+						"description": "JSON-LD Type."
+					},
+					"annotationObject": {
+						"$ref": "#/components/schemas/JsonLdNodeObject"
+					},
+					"edgeRelationships": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "The relationships between the two vertices."
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type",
+					"edgeRelationships"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an edge between two vertices in an auditable item graph."
+			},
+			"AuditableItemGraphPatchOperation": {
+				"type": "object",
+				"properties": {
+					"@context": {
+						"anyOf": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "array",
+								"minItems": 1,
+								"items": [
+									{
+										"type": "string",
+										"const": "https://schema.twindev.org/aig/"
+									}
+								],
+								"additionalItems": {
+									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+								}
+							}
+						],
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphPatchOperation",
+						"description": "JSON-LD Type."
+					},
+					"patchOperation": {
+						"type": "string",
+						"enum": [
+							"add",
+							"remove",
+							"replace",
+							"move",
+							"copy",
+							"test"
+						],
+						"description": "The operation that was performed on the item."
+					},
+					"patchPath": {
+						"type": "string",
+						"description": "The path to the object that was changed."
+					},
+					"patchFrom": {
+						"type": "string",
+						"description": "The path the value was copied or moved from."
+					},
+					"patchValue": {
+						"description": "The value to add."
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"patchOperation",
+					"patchPath"
+				],
+				"additionalProperties": false,
+				"description": "The patch operation for JSON diffs."
+			},
+			"AuditableItemGraphResource": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The id of the element."
+					},
+					"dateCreated": {
+						"type": "string",
+						"description": "The date/time of when the element was created."
+					},
+					"dateModified": {
+						"type": "string",
+						"description": "The date/time of when the element was modified."
+					},
+					"dateDeleted": {
+						"type": "string",
+						"description": "The date/time of when the element was deleted, as we never actually remove items."
+					},
+					"@context": {
+						"anyOf": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "array",
+								"minItems": 1,
+								"items": [
+									{
+										"type": "string",
+										"const": "https://schema.twindev.org/aig/"
+									}
+								],
+								"additionalItems": {
+									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+								}
+							}
+						],
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphResource",
+						"description": "JSON-LD Type."
+					},
+					"resourceObject": {
+						"$ref": "#/components/schemas/JsonLdNodeObject"
+					}
+				},
+				"required": [
+					"@context",
+					"type"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an auditable item graph vertex resource."
+			},
+			"AuditableItemGraphVertex": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The id of the element."
+					},
+					"dateCreated": {
+						"type": "string",
+						"description": "The date/time of when the element was created."
+					},
+					"dateModified": {
+						"type": "string",
+						"description": "The date/time of when the element was modified."
+					},
+					"dateDeleted": {
+						"type": "string",
+						"description": "The date/time of when the element was deleted, as we never actually remove items."
+					},
+					"@context": {
+						"type": "array",
+						"minItems": 2,
+						"items": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/common/"
+							}
+						],
+						"additionalItems": {
+							"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+						},
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphVertex",
+						"description": "JSON-LD Type."
+					},
+					"nodeIdentity": {
+						"type": "string",
+						"description": "The identity of the node which controls the vertex."
+					},
+					"annotationObject": {
+						"$ref": "#/components/schemas/JsonLdNodeObject"
+					},
+					"aliases": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AuditableItemGraphAlias"
+						},
+						"description": "Alternative aliases that can be used to identify the vertex."
+					},
+					"resources": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AuditableItemGraphResource"
+						},
+						"description": "The resources attached to the vertex."
+					},
+					"edges": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AuditableItemGraphEdge"
+						},
+						"description": "Edges connected to the vertex."
+					},
+					"changesets": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AuditableItemGraphChangeset"
+						},
+						"description": "Changesets for the vertex."
+					},
+					"verified": {
+						"type": "boolean",
+						"description": "Is the vertex verified, will only be populated when verification is requested."
+					}
+				},
+				"required": [
+					"@context",
+					"id",
+					"type"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an auditable item graph vertex."
+			},
+			"AuditableItemGraphVertexList": {
+				"type": "object",
+				"properties": {
+					"@context": {
+						"anyOf": [
+							{
+								"type": "string",
+								"const": "https://schema.twindev.org/aig/"
+							},
+							{
+								"type": "array",
+								"minItems": 1,
+								"items": [
+									{
+										"type": "string",
+										"const": "https://schema.twindev.org/aig/"
+									}
+								],
+								"additionalItems": {
+									"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
+								}
+							}
+						],
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "AuditableItemGraphVertexList",
+						"description": "JSON-LD Type."
+					},
+					"vertices": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AuditableItemGraphVertex"
+						},
+						"description": "The list of vertices."
+					},
+					"cursor": {
+						"type": "string",
+						"description": "The cursor to get the next chunk of vertices."
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"vertices"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an auditable item graph vertex list."
+			},
 			"BlobStorageEntry": {
 				"type": "object",
 				"properties": {
@@ -1175,6 +1697,65 @@
 				],
 				"additionalProperties": false,
 				"description": "Model to describe serialized error."
+			},
+			"ImmutableProofFailure": {
+				"anyOf": [
+					{
+						"type": "string",
+						"const": "notIssued",
+						"description": "Proof not yet issued."
+					},
+					{
+						"type": "string",
+						"const": "proofMissing",
+						"description": "Proof missing."
+					},
+					{
+						"type": "string",
+						"const": "cryptoSuiteMismatch",
+						"description": "Crypto suite mismatch."
+					},
+					{
+						"type": "string",
+						"const": "proofTypeMismatch",
+						"description": "Proof type."
+					},
+					{
+						"type": "string",
+						"const": "signatureMismatch",
+						"description": "Signature mismatch."
+					}
+				],
+				"description": "The failure reason of the proof."
+			},
+			"ImmutableProofVerification": {
+				"type": "object",
+				"properties": {
+					"@context": {
+						"type": "string",
+						"const": "https://schema.twindev.org/immutable-proof/",
+						"description": "JSON-LD Context."
+					},
+					"type": {
+						"type": "string",
+						"const": "ImmutableProofVerification",
+						"description": "JSON-LD Type."
+					},
+					"verified": {
+						"type": "boolean",
+						"description": "Was the verification successful."
+					},
+					"failure": {
+						"$ref": "#/components/schemas/ImmutableProofFailure"
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"verified"
+				],
+				"additionalProperties": false,
+				"description": "Interface describing an immutable proof verification."
 			},
 			"JsonLdContainerType": {
 				"type": "string",
