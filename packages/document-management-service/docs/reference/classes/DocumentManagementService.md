@@ -30,7 +30,7 @@ The options for the service.
 
 ### NAMESPACE
 
-> `readonly` `static` **NAMESPACE**: `string` = `"document-management"`
+> `readonly` `static` **NAMESPACE**: `string` = `"documents"`
 
 The namespace supported by the document management service.
 
