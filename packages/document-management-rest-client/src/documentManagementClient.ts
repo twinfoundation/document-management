@@ -46,7 +46,7 @@ export class DocumentManagementClient
 	 * @param config The configuration for the client.
 	 */
 	constructor(config: IBaseRestClientConfig) {
-		super(DocumentManagementClient._CLASS_NAME, config, "documents");
+		super(DocumentManagementClient._CLASS_NAME, config, "document-management");
 	}
 
 	/**

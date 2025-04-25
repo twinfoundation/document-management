@@ -8,8 +8,8 @@ import {
 
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
-		name: "documents",
-		defaultBaseRoute: "documents",
+		name: "document-management",
+		defaultBaseRoute: "document-management",
 		tags: tagsDocumentManagement,
 		generateRoutes: generateRestRoutesDocumentManagement
 	}

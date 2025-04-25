@@ -8,6 +8,10 @@ import type {
 	IRestRoute,
 	ITag
 } from "@twin.org/api-models";
+import {
+	AuditableItemGraphContexts,
+	AuditableItemGraphTypes
+} from "@twin.org/auditable-item-graph-models";
 import { Coerce, ComponentFactory, Converter, Guards, Is } from "@twin.org/core";
 import {
 	DocumentContexts,
@@ -327,91 +331,71 @@ export function generateRestRoutesDocumentManagement(
 			]
 		},
 		responseType: [
-			// {
-			// 	type: nameof<IDocumentManagementQueryResponse>(),
-			// 	examples: [
-			// 		{
-			// 			id: "DocumentManagementQueryResponseExample",
-			// 			response: {
-			// 				body: {
-			// 					"@context": [DocumentContexts.ContextRoot, DocumentContexts.ContextRootCommon],
-			// 					type: DocumentTypes.DocumentList,
-			// 					documents: [
-			// 						{
-			// 							"@context": [
-			// 								DocumentContexts.ContextRoot,
-			// 								DocumentContexts.ContextRootCommon,
-			// 								SchemaOrgContexts.ContextRoot
-			// 							],
-			// 							type: DocumentTypes.Document,
-			// 							id: "2721000:0",
-			// 							documentId: "2721000",
-			// 							documentIdFormat: "bol",
-			// 							documentCode: UneceDocumentCodes.BillOfLading,
-			// 							documentRevision: 0,
-			// 							blobStorageId:
-			// 								"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
-			// 							blobHash: "sha256:123456",
-			// 							dateCreated: "2024-01-01T00:00:00Z",
-			// 							annotationObject: {
-			// 								"@context": "https://schema.org",
-			// 								"@type": "DigitalDocument",
-			// 								name: "myfile.pdf"
-			// 							},
-			// 							nodeIdentity:
-			// 								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
-			// 							userIdentity:
-			// 								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
-			// 						}
-			// 					]
-			// 				}
-			// 			}
-			// 		}
-			// 	]
-			// },
-			// {
-			// 	type: nameof<IDocumentManagementQueryResponse>(),
-			// 	mimeType: MimeTypes.JsonLd,
-			// 	examples: [
-			// 		{
-			// 			id: "DocumentManagementListResponseJsonLdExample",
-			// 			response: {
-			// 				body: {
-			// 					"@context": [DocumentContexts.ContextRoot, DocumentContexts.ContextRootCommon],
-			// 					type: DocumentTypes.DocumentList,
-			// 					documents: [
-			// 						{
-			// 							"@context": [
-			// 								DocumentContexts.ContextRoot,
-			// 								DocumentContexts.ContextRootCommon,
-			// 								SchemaOrgContexts.ContextRoot
-			// 							],
-			// 							type: DocumentTypes.Document,
-			// 							id: "2721000:0",
-			// 							documentId: "2721000",
-			// 							documentIdFormat: "bol",
-			// 							documentCode: UneceDocumentCodes.BillOfLading,
-			// 							documentRevision: 0,
-			// 							blobStorageId:
-			// 								"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
-			// 							blobHash: "sha256:123456",
-			// 							dateCreated: "2024-01-01T00:00:00Z",
-			// 							annotationObject: {
-			// 								"@context": "https://schema.org",
-			// 								"@type": "DigitalDocument",
-			// 								name: "myfile.pdf"
-			// 							},
-			// 							nodeIdentity:
-			// 								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
-			// 							userIdentity:
-			// 								"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
-			// 						}
-			// 					]
-			// 				}
-			// 			}
-			// 		}
-			// 	]
-			// }
+			{
+				type: nameof<IDocumentManagementQueryResponse>(),
+				examples: [
+					{
+						id: "DocumentManagementQueryResponseExample",
+						response: {
+							body: {
+								"@context": [AuditableItemGraphContexts.ContextRoot],
+								type: AuditableItemGraphTypes.VertexList,
+								vertices: [
+									{
+										"@context": [
+											AuditableItemGraphContexts.ContextRoot,
+											AuditableItemGraphContexts.ContextRootCommon
+										],
+										id: "aig:c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7",
+										type: AuditableItemGraphTypes.Vertex,
+										dateCreated: "2024-08-22T04:13:20.000Z",
+										aliases: [
+											{
+												"@context": [AuditableItemGraphContexts.ContextRoot],
+												id: "test-id-0",
+												type: AuditableItemGraphTypes.Alias,
+												dateCreated: "2024-08-22T04:13:20.000Z"
+											}
+										],
+										resources: [
+											{
+												"@context": AuditableItemGraphContexts.ContextRoot,
+												type: AuditableItemGraphTypes.Resource,
+												dateCreated: "2024-08-22T04:13:20.000Z",
+												resourceObject: {
+													"@context": [
+														"https://schema.twindev.org/documents/",
+														"https://schema.twindev.org/common/",
+														"https://schema.org"
+													],
+													type: "Document",
+													id: "test-id-0:0",
+													documentId: "test-id-0",
+													documentCode: "unece:DocumentCodeList#705",
+													documentRevision: 0,
+													annotationObject: {
+														"@context": "https://schema.org",
+														type: "DigitalDocument",
+														name: "bill-of-lading"
+													},
+													blobHash: "sha256:E3Duqrp6bHojSx+CzDttAToAiP1eFkCDAPBbKLABVGM=",
+													blobStorageId:
+														"blob:memory:1370eeaaba7a6c7a234b1f82cc3b6d013a0088fd5e16408300f05b28b0015463",
+													dateCreated: "2024-08-22T04:13:20.000Z",
+													nodeIdentity:
+														"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
+													userIdentity:
+														"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404"
+												}
+											}
+										]
+									}
+								]
+							}
+						}
+					}
+				]
+			}
 		]
 	};
 
