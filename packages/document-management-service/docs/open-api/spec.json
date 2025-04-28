@@ -478,6 +478,24 @@
 						}
 					},
 					{
+						"name": "extractRuleGroupId",
+						"description": "If provided will extract data from the document using the specified rule group id.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "extractMimeType",
+						"description": "By default extraction will auto detect the mime type of the document, this can be used to override the detection.",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
 						"name": "pageSize",
 						"description": "Page size of items to return, defaults to 1 so only most recent is returned.",
 						"in": "query",
@@ -1466,6 +1484,9 @@
 					},
 					"blobStorageEntry": {
 						"$ref": "#/components/schemas/BlobStorageEntry"
+					},
+					"extractedData": {
+						"description": "The data extracted from the document using data extraction services."
 					},
 					"attestationId": {
 						"type": "string",

@@ -27,6 +27,7 @@ import {
 } from "@twin.org/core";
 import { Sha256 } from "@twin.org/crypto";
 import { JsonLdProcessor, type IJsonLdNodeObject } from "@twin.org/data-json-ld";
+import type { IDataProcessingComponent } from "@twin.org/data-processing-models";
 import {
 	DocumentContexts,
 	DocumentTypes,
@@ -73,6 +74,12 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	private readonly _attestationComponent: IAttestationComponent;
 
 	/**
+	 * The connector for the data processing.
+	 * @internal
+	 */
+	private readonly _dataProcessingComponent: IDataProcessingComponent;
+
+	/**
 	 * Create a new instance of DocumentManagementService.
 	 * @param options The options for the service.
 	 */
@@ -85,6 +92,9 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 		);
 		this._attestationComponent = ComponentFactory.get<IAttestationComponent>(
 			options?.attestationComponentType ?? "attestation"
+		);
+		this._dataProcessingComponent = ComponentFactory.get<IDataProcessingComponent>(
+			options?.dataProcessingComponentType ?? "data-processing"
 		);
 
 		SchemaOrgDataTypes.registerRedirects();
@@ -395,6 +405,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
 	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
 	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
+	 * @param options.extractRuleGroupId If provided will extract data from the document using the specified rule group id.
+	 * @param options.extractMimeType By default extraction will auto detect the mime type of the document, this can be used to override the detection.
 	 * @param cursor The cursor to get the next chunk of revisions.
 	 * @param pageSize Page size of items to return, defaults to 1 so only most recent is returned.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
@@ -408,6 +420,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			includeBlobStorageData?: boolean;
 			includeAttestation?: boolean;
 			includeRemoved?: boolean;
+			extractRuleGroupId?: string;
+			extractMimeType?: string;
 		},
 		cursor?: string,
 		pageSize?: number,
@@ -721,7 +735,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
 	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
 	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
-	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
+	 * @param options.extractRuleGroupId If provided will extract data from the document using the specified rule group id.
+	 * @param options.extractMimeType By default extraction will auto detect the mime type of the document, this can be used to override the detection.
 	 * @param cursor The cursor to get the next chunk of revisions.
 	 * @param pageSize Page size of items to return, defaults to 1 so only most recent is returned.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
@@ -735,6 +750,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			includeBlobStorageMetadata?: boolean;
 			includeBlobStorageData?: boolean;
 			includeAttestation?: boolean;
+			extractRuleGroupId?: string;
+			extractMimeType?: string;
 		},
 		cursor?: string,
 		pageSize?: number,
@@ -768,22 +785,46 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			const includeBlobStorageMetadata = options?.includeBlobStorageMetadata ?? false;
 			const includeBlobStorageData = options?.includeBlobStorageData ?? false;
 			const includeAttestation = options?.includeAttestation ?? false;
+			const extractData = Is.stringValue(options?.extractRuleGroupId);
 
 			for (let i = 0; i < slicedResources.length; i++) {
 				const document = slicedResources[i].resourceObject as unknown as IDocument;
 				if (Is.object(document)) {
 					docList.documents.push(document);
 
-					if (includeBlobStorageMetadata || includeBlobStorageData) {
+					const blobRequired = includeBlobStorageMetadata || includeBlobStorageData;
+					if (blobRequired || extractData) {
 						const blobEntry = await this._blobStorageComponent.get(
 							document.blobStorageId,
-							includeBlobStorageData,
+							includeBlobStorageData || extractData,
 							userIdentity,
 							nodeIdentity
 						);
-						document.blobStorageEntry = blobEntry;
-						if (!docList["@context"].includes(BlobStorageContexts.ContextRoot)) {
-							docList["@context"].push(BlobStorageContexts.ContextRoot);
+
+						if (blobRequired) {
+							document.blobStorageEntry = blobEntry;
+
+							if (!docList["@context"].includes(BlobStorageContexts.ContextRoot)) {
+								docList["@context"].push(BlobStorageContexts.ContextRoot);
+							}
+						}
+
+						if (Is.stringValue(options?.extractRuleGroupId) && Is.stringValue(blobEntry.blob)) {
+							const binaryBlob = Converter.base64ToBytes(blobEntry.blob);
+							document.extractedData = await this._dataProcessingComponent.extract(
+								options.extractRuleGroupId,
+								binaryBlob,
+								undefined,
+								options?.extractMimeType
+							);
+						}
+
+						// If we have the blob data due to extraction but we weren't asked for it
+						// then we remove it from the document
+						if (!blobRequired) {
+							delete document.blobStorageEntry;
+						} else if (!includeBlobStorageData) {
+							delete document.blobStorageEntry?.blob;
 						}
 					}
 

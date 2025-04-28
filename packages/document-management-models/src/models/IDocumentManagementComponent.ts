@@ -81,6 +81,8 @@ export interface IDocumentManagementComponent extends IComponent {
 	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
 	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
 	 * @param options.includeRemoved Flag to include deleted documents, defaults to false.
+	 * @param options.extractRuleGroupId If provided will extract data from the document using the specified rule group id.
+	 * @param options.extractMimeType By default extraction will auto detect the mime type of the document, this can be used to override the detection.
 	 * @param cursor The cursor to get the next chunk of revisions.
 	 * @param pageSize Page size of items to return, defaults to 1 so only most recent is returned.
 	 * @param userIdentity The identity to perform the auditable item graph operation with.
@@ -94,6 +96,8 @@ export interface IDocumentManagementComponent extends IComponent {
 			includeBlobStorageData?: boolean;
 			includeAttestation?: boolean;
 			includeRemoved?: boolean;
+			extractRuleGroupId?: string;
+			extractMimeType?: string;
 		},
 		cursor?: string,
 		pageSize?: number,

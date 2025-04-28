@@ -216,6 +216,18 @@ Flag to include the attestation information for the document, defaults to false.
 
 Flag to include deleted documents, defaults to false.
 
+###### extractRuleGroupId?
+
+`string`
+
+If provided will extract data from the document using the specified rule group id.
+
+###### extractMimeType?
+
+`string`
+
+By default extraction will auto detect the mime type of the document, this can be used to override the detection.
+
 ##### cursor?
 
 `string`

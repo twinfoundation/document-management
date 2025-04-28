@@ -25,6 +25,12 @@ export interface IDocumentManagementServiceConstructorOptions {
 	attestationComponentType?: string;
 
 	/**
+	 * The type of the data processing component.
+	 * @default data-processing
+	 */
+	dataProcessingComponentType?: string;
+
+	/**
 	 * The configuration for the service.
 	 */
 	config?: IDocumentManagementServiceConfig;
