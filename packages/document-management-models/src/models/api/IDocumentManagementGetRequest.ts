@@ -52,6 +52,16 @@ export interface IDocumentManagementGetRequest {
 		includeRemoved?: boolean;
 
 		/**
+		 * If provided will extract data from the document using the specified rule group id.
+		 */
+		extractRuleGroupId?: string;
+
+		/**
+		 * By default extraction will auto detect the mime type of the document, this can be used to override the detection.
+		 */
+		extractMimeType?: string;
+
+		/**
 		 * Page size of items to return, defaults to 1 so only most recent is returned.
 		 * @default 1
 		 */

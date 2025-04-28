@@ -23,6 +23,17 @@ import {
 	initSchema as initSchemaBlobStorage
 } from "@twin.org/blob-storage-service";
 import { ComponentFactory, Converter } from "@twin.org/core";
+import { JsonConverterConnector } from "@twin.org/data-processing-converters";
+import { JsonPathExtractorConnector } from "@twin.org/data-processing-extractors";
+import {
+	DataConverterConnectorFactory,
+	DataExtractorConnectorFactory
+} from "@twin.org/data-processing-models";
+import {
+	DataProcessingService,
+	initSchema as initSchemaDataProcessing,
+	type ExtractionRuleGroup
+} from "@twin.org/data-processing-service";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
 import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
 import {
@@ -45,6 +56,7 @@ import {
 	type VerifiableItem
 } from "@twin.org/verifiable-storage-connector-entity-storage";
 import { VerifiableStorageConnectorFactory } from "@twin.org/verifiable-storage-models";
+import { MimeTypes } from "@twin.org/web";
 import { setupTestEnv, TEST_NODE_IDENTITY, TEST_USER_IDENTITY } from "./setupTestEnv";
 import { DocumentManagementService } from "../src/documentManagementService";
 
@@ -64,6 +76,8 @@ let attestationConnector: NftAttestationConnector;
 let auditableItemGraphComponent: AuditableItemGraphService;
 let vertexEntityStorage: MemoryEntityStorageConnector<AuditableItemGraphVertex>;
 let changesetEntityStorage: MemoryEntityStorageConnector<AuditableItemGraphChangeset>;
+let extractionRuleGroupEntityStorage: MemoryEntityStorageConnector<ExtractionRuleGroup>;
+let dataProcessingComponent: DataProcessingService;
 
 describe("document-management-service", async () => {
 	beforeAll(async () => {
@@ -77,6 +91,7 @@ describe("document-management-service", async () => {
 		initSchemaAuditableItemGraph();
 		initSchemaNft();
 		initSchemaBlobStorage();
+		initSchemaDataProcessing();
 
 		verifiableItemEntityStorage = new MemoryEntityStorageConnector({
 			entitySchema: nameof<VerifiableItem>()
@@ -150,6 +165,23 @@ describe("document-management-service", async () => {
 
 		attestationComponent = new AttestationService();
 		ComponentFactory.register("attestation", () => attestationComponent);
+
+		extractionRuleGroupEntityStorage = new MemoryEntityStorageConnector<ExtractionRuleGroup>({
+			entitySchema: "ExtractionRuleGroup"
+		});
+		EntityStorageConnectorFactory.register(
+			"extraction-rule-group",
+			() => extractionRuleGroupEntityStorage
+		);
+
+		const jsonPathExtractor = new JsonPathExtractorConnector();
+		DataExtractorConnectorFactory.register("json-path", () => jsonPathExtractor);
+
+		const jsonConverterConnector = new JsonConverterConnector();
+		DataConverterConnectorFactory.register(MimeTypes.Json, () => jsonConverterConnector);
+
+		dataProcessingComponent = new DataProcessingService();
+		ComponentFactory.register("data-processing", () => dataProcessingComponent);
 
 		// Mock the module helper to execute the method in the same thread, so we don't have to create an engine
 		// and the background tasks will run in this thread
@@ -1337,7 +1369,7 @@ describe("document-management-service", async () => {
 
 		for (let i = 0; i < 5; i++) {
 			await service.create(
-				`test-id-${0}`,
+				`test-id-${i}`,
 				undefined,
 				UneceDocumentCodes.BillOfLading,
 				Converter.utf8ToBytes(`Hello World${i}`),
@@ -1360,5 +1392,146 @@ describe("document-management-service", async () => {
 		);
 
 		expect(vertices.vertices.length).toEqual(5);
+	});
+
+	test("can extract data from a document with no blob data returned", async () => {
+		const service = new DocumentManagementService();
+
+		const docId = await service.create(
+			"test-id",
+			undefined,
+			UneceDocumentCodes.BillOfLading,
+			Converter.utf8ToBytes(JSON.stringify({ address: { line1: "bar" } })),
+			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+			undefined,
+			{
+				createAttestation: false
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		await extractionRuleGroupEntityStorage.set({
+			id: "my-rules",
+			label: "My Rules",
+			rules: [
+				{
+					source: "$.address.line1",
+					target: "address.firstLine"
+				}
+			]
+		});
+
+		const result = await service.get(
+			docId,
+			{ extractRuleGroupId: "my-rules" },
+			undefined,
+			undefined,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		expect(result.documents[0].blobStorageEntry).toBeUndefined();
+		expect(result.documents[0].extractedData).toEqual({
+			address: {
+				firstLine: "bar"
+			}
+		});
+	});
+
+	test("can extract data from a document and get the blob metadata", async () => {
+		const service = new DocumentManagementService();
+
+		const docId = await service.create(
+			"test-id",
+			undefined,
+			UneceDocumentCodes.BillOfLading,
+			Converter.utf8ToBytes(JSON.stringify({ address: { line1: "bar" } })),
+			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+			undefined,
+			{
+				createAttestation: false
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		await extractionRuleGroupEntityStorage.set({
+			id: "my-rules",
+			label: "My Rules",
+			rules: [
+				{
+					source: "$.address.line1",
+					target: "address.firstLine"
+				}
+			]
+		});
+
+		const result = await service.get(
+			docId,
+			{ extractRuleGroupId: "my-rules", includeBlobStorageMetadata: true },
+			undefined,
+			undefined,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		expect(result.documents[0].blobStorageEntry).toBeDefined();
+		expect(result.documents[0].blobStorageEntry?.blob).toBeUndefined();
+		expect(result.documents[0].extractedData).toEqual({
+			address: {
+				firstLine: "bar"
+			}
+		});
+	});
+
+	test("can extract data from a document and get the blob metadata and blob data", async () => {
+		const service = new DocumentManagementService();
+
+		const docId = await service.create(
+			"test-id",
+			undefined,
+			UneceDocumentCodes.BillOfLading,
+			Converter.utf8ToBytes(JSON.stringify({ address: { line1: "bar" } })),
+			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+			undefined,
+			{
+				createAttestation: false
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		await extractionRuleGroupEntityStorage.set({
+			id: "my-rules",
+			label: "My Rules",
+			rules: [
+				{
+					source: "$.address.line1",
+					target: "address.firstLine"
+				}
+			]
+		});
+
+		const result = await service.get(
+			docId,
+			{
+				extractRuleGroupId: "my-rules",
+				includeBlobStorageMetadata: true,
+				includeBlobStorageData: true
+			},
+			undefined,
+			undefined,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		expect(result.documents[0].blobStorageEntry).toBeDefined();
+		expect(result.documents[0].blobStorageEntry?.blob).toBeDefined();
+		expect(result.documents[0].extractedData).toEqual({
+			address: {
+				firstLine: "bar"
+			}
+		});
 	});
 });

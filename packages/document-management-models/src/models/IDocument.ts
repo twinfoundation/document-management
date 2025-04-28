@@ -73,6 +73,11 @@ export interface IDocument {
 	blobStorageEntry?: IBlobStorageEntry;
 
 	/**
+	 * The data extracted from the document using data extraction services.
+	 */
+	extractedData?: unknown;
+
+	/**
 	 * The attestation for the document if one was created.
 	 */
 	attestationId?: string;
