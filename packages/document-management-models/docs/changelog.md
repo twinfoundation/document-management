@@ -1,5 +1,12 @@
 # @twin.org/document-management-models - Changelog
 
+## [0.0.1-next.11](https://github.com/twinfoundation/document-management/compare/document-management-models-v0.0.1-next.10...document-management-models-v0.0.1-next.11) (2025-04-28)
+
+
+### Features
+
+* document get can perform extraction ([#6](https://github.com/twinfoundation/document-management/issues/6)) ([5ce6d37](https://github.com/twinfoundation/document-management/commit/5ce6d37432ad271ca5783f422846f4be98ec2215))
+
 ## [0.0.1-next.10](https://github.com/twinfoundation/document-management/compare/document-management-models-v0.0.1-next.9...document-management-models-v0.0.1-next.10) (2025-04-25)
 
 
