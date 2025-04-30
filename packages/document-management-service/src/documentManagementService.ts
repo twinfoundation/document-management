@@ -188,7 +188,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 					SchemaOrgContexts.ContextRoot
 				],
 				type: DocumentTypes.Document,
-				id: `${documentId}:0`,
+				id: this.createDocumentId(documentId, 0),
 				documentId,
 				documentIdFormat,
 				documentCode,
@@ -278,14 +278,18 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 
 		try {
 			const documentVertex = await this._auditableItemGraphComponent.get(
-				auditableItemGraphDocumentId
+				auditableItemGraphDocumentId,
+				{ includeDeleted: true }
 			);
+
 			if (Is.empty(documentVertex.resources)) {
 				throw new NotFoundError(this.CLASS_NAME, "documentRevisionNone");
 			}
 
 			const documents = await this.getDocumentsFromVertex(documentVertex);
 			const latestRevision: IDocument | undefined = documents.documents[0];
+
+			documentVertex.resources = documentVertex.resources.filter(r => Is.empty(r.dateDeleted));
 
 			if (Is.empty(latestRevision)) {
 				throw new NotFoundError(this.CLASS_NAME, "documentRevisionNone");
@@ -331,7 +335,10 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 					const newRevision = ObjectHelper.clone(latestRevision);
 
 					newRevision.documentRevision++;
-					newRevision.id = `${newRevision.documentId}:${newRevision.documentRevision}`;
+					newRevision.id = this.createDocumentId(
+						newRevision.documentId,
+						newRevision.documentRevision
+					);
 					newRevision.blobHash = newBlobHash;
 					newRevision.blobStorageId = blobStorageId;
 					newRevision.annotationObject = annotationObject;
@@ -452,6 +459,73 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				throw error;
 			}
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
+		}
+	}
+
+	/**
+	 * Get a document revision using it's auditable item graph vertex id.
+	 * @param auditableItemGraphDocumentId The auditable item graph vertex id which contains the document.
+	 * @param revision The revision id for the document.
+	 * @param options Additional options for the get operation.
+	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
+	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
+	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
+	 * @param options.extractRuleGroupId If provided will extract data from the document using the specified rule group id.
+	 * @param options.extractMimeType By default extraction will auto detect the mime type of the document, this can be used to override the detection.
+	 * @param userIdentity The identity to perform the auditable item graph operation with.
+	 * @param nodeIdentity The node identity to use for vault operations.
+	 * @returns The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
+	 */
+	public async getRevision(
+		auditableItemGraphDocumentId: string,
+		revision: number,
+		options?: {
+			includeBlobStorageMetadata?: boolean;
+			includeBlobStorageData?: boolean;
+			includeAttestation?: boolean;
+			extractRuleGroupId?: string;
+			extractMimeType?: string;
+		},
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<IDocument> {
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphDocumentId), auditableItemGraphDocumentId);
+		Guards.integer(this.CLASS_NAME, nameof(revision), revision);
+
+		try {
+			const documentVertex = await this._auditableItemGraphComponent.get(
+				auditableItemGraphDocumentId,
+				{ includeDeleted: true }
+			);
+
+			if (Is.empty(documentVertex.resources)) {
+				throw new NotFoundError(this.CLASS_NAME, "documentRevisionNone");
+			}
+
+			documentVertex.resources = documentVertex.resources.filter(
+				d => d.resourceObject?.documentRevision === revision
+			);
+
+			if (documentVertex.resources.length === 0) {
+				throw new NotFoundError(this.CLASS_NAME, "documentRevisionNotFound", revision.toString());
+			}
+
+			// Populate the document and revisions with the options set
+			const docList = await this.getDocumentsFromVertex(
+				documentVertex,
+				options,
+				undefined,
+				undefined,
+				userIdentity,
+				nodeIdentity
+			);
+
+			return JsonLdProcessor.compact(docList.documents[0], docList.documents[0]["@context"]);
+		} catch (error) {
+			if (BaseError.someErrorName(error, nameof<NotFoundError>())) {
+				throw error;
+			}
+			throw new GeneralError(this.CLASS_NAME, "getRevisionFailed", undefined, error);
 		}
 	}
 
@@ -886,5 +960,19 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			userIdentity,
 			nodeIdentity
 		);
+	}
+
+	/**
+	 * Create a document id from the document id and revision.
+	 * @param documentId The document id to create.
+	 * @param revision The revision of the document.
+	 * @returns The document id.
+	 * @internal
+	 */
+	private createDocumentId(documentId: string, revision: number): string {
+		const documentIdHash = Converter.bytesToBase64Url(
+			Sha256.sum256(Converter.utf8ToBytes(documentId))
+		);
+		return `document:${documentIdHash}:${revision}`;
 	}
 }

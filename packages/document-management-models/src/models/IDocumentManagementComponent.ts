@@ -4,6 +4,7 @@ import type { IAuditableItemGraphVertexList } from "@twin.org/auditable-item-gra
 import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type { UneceDocumentCodes } from "@twin.org/standards-unece";
+import type { IDocument } from "./IDocument";
 import type { IDocumentList } from "./IDocumentList";
 
 /**
@@ -104,6 +105,34 @@ export interface IDocumentManagementComponent extends IComponent {
 		userIdentity?: string,
 		nodeIdentity?: string
 	): Promise<IDocumentList>;
+
+	/**
+	 * Get a document revision using it's auditable item graph vertex id.
+	 * @param auditableItemGraphDocumentId The auditable item graph vertex id which contains the document.
+	 * @param revision The revision id of the document to get.
+	 * @param options Additional options for the get operation.
+	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
+	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
+	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
+	 * @param options.extractRuleGroupId If provided will extract data from the document using the specified rule group id.
+	 * @param options.extractMimeType By default extraction will auto detect the mime type of the document, this can be used to override the detection.
+	 * @param userIdentity The identity to perform the auditable item graph operation with.
+	 * @param nodeIdentity The node identity to use for vault operations.
+	 * @returns The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
+	 */
+	getRevision(
+		auditableItemGraphDocumentId: string,
+		revision: number,
+		options?: {
+			includeBlobStorageMetadata?: boolean;
+			includeBlobStorageData?: boolean;
+			includeAttestation?: boolean;
+			extractRuleGroupId?: string;
+			extractMimeType?: string;
+		},
+		userIdentity?: string,
+		nodeIdentity?: string
+	): Promise<IDocument>;
 
 	/**
 	 * Remove an auditable item graph vertex using it's id.

@@ -257,7 +257,7 @@ describe("document-management-service", async () => {
 								"https://schema.org"
 							],
 							type: "Document",
-							id: "test-doc-id:aaa:0",
+							id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 							documentId: "test-doc-id:aaa",
 							documentCode: "unece:DocumentCodeList#705",
 							documentRevision: 0,
@@ -326,7 +326,7 @@ describe("document-management-service", async () => {
 				id: "1414141414141414141414141414141414141414141414141414141414141414",
 				immutableMetadata: {
 					proof:
-						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJ0ZXN0LWRvYy1pZDphYWE6MCIsInZjIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vd3d3LnczLm9yZy9ucy9jcmVkZW50aWFscy92MiIsImh0dHBzOi8vc2NoZW1hLnR3aW5kZXYub3JnL2RvY3VtZW50cy8iLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9jb21tb24vIiwiaHR0cHM6Ly9zY2hlbWEub3JnIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJEb2N1bWVudEF0dGVzdGF0aW9uIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImRvY3VtZW50SWQiOiJ0ZXN0LWRvYy1pZDphYWEiLCJkb2N1bWVudENvZGUiOiJ1bmVjZTpEb2N1bWVudENvZGVMaXN0IzcwNSIsImRvY3VtZW50UmV2aXNpb24iOjAsImRhdGVDcmVhdGVkIjoiMjAyNC0wOC0yMlQwNDoxMzoyMC4wMDBaIiwiYmxvYkhhc2giOiJzaGEyNTY6cFpHbTFBdjBJRUJLQVJjeno3ZXhrTllzWmI4THphTXJWN0ozMmEyZkZHND0ifX19.dCinmTy1jwbQ0HB4R4KkPFnKOZ4BsblIUAVGP8DGh7f0hKcu91DWmO8_xLgwOjXZtpZq20MQe2kqfZPUzYNpCA",
+						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJkb2N1bWVudDpyd1FVcnpfYUx0dm1ZV2pJb2xMVTFQTkhEVFhkMjRSVVZKSDE0SkRlNUs4OjAiLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9kb2N1bWVudHMvIiwiaHR0cHM6Ly9zY2hlbWEudHdpbmRldi5vcmcvY29tbW9uLyIsImh0dHBzOi8vc2NoZW1hLm9yZyJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRG9jdW1lbnRBdHRlc3RhdGlvbiJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJkYXRlQ3JlYXRlZCI6IjIwMjQtMDgtMjJUMDQ6MTM6MjAuMDAwWiIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9In19fQ.BVhqtBBobNS4D6zOj0XIRDoKiMoDNwUmmrdqRgG0LfDXN9wigGC4iM-ADNGuBTKrwHfNiYCKWD1wdBe2JLe8AQ",
 					version: "1"
 				},
 				issuer:
@@ -416,7 +416,7 @@ describe("document-management-service", async () => {
 								"https://schema.org"
 							],
 							type: "Document",
-							id: "test-doc-id:aaa:0",
+							id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 							documentId: "test-doc-id:aaa",
 							documentIdFormat: "foo",
 							documentCode: "unece:DocumentCodeList#705",
@@ -524,7 +524,7 @@ describe("document-management-service", async () => {
 								"https://schema.org"
 							],
 							type: "Document",
-							id: "test-doc-id:aaa:0",
+							id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 							documentId: "test-doc-id:aaa",
 							documentCode: "unece:DocumentCodeList#705",
 							documentRevision: 0,
@@ -715,7 +715,7 @@ describe("document-management-service", async () => {
 								"https://schema.org"
 							],
 							type: "Document",
-							id: "test-doc-id:aaa:0",
+							id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 							documentId: "test-doc-id:aaa",
 							documentIdFormat: "foo",
 							documentCode: "unece:DocumentCodeList#705",
@@ -859,7 +859,7 @@ describe("document-management-service", async () => {
 								"https://schema.org"
 							],
 							type: "Document",
-							id: "test-doc-id:aaa:0",
+							id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 							documentId: "test-doc-id:aaa",
 							documentIdFormat: "foo",
 							documentCode: "unece:DocumentCodeList#705",
@@ -961,7 +961,7 @@ describe("document-management-service", async () => {
 			type: "DocumentList",
 			documents: [
 				{
-					id: "test-doc-id:aaa:0",
+					id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 					documentId: "test-doc-id:aaa",
 					type: "Document",
 					dateCreated: "2024-08-22T04:13:20.000Z",
@@ -1023,7 +1023,7 @@ describe("document-management-service", async () => {
 			type: "DocumentList",
 			documents: [
 				{
-					id: "test-doc-id:aaa:0",
+					id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 					documentId: "test-doc-id:aaa",
 					type: "Document",
 					annotationObject: {
@@ -1094,7 +1094,7 @@ describe("document-management-service", async () => {
 			type: "DocumentList",
 			documents: [
 				{
-					id: "test-doc-id:aaa:0",
+					id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 					documentId: "test-doc-id:aaa",
 					type: "Document",
 					annotationObject: {
@@ -1167,7 +1167,7 @@ describe("document-management-service", async () => {
 			type: "DocumentList",
 			documents: [
 				{
-					id: "test-doc-id:aaa:0",
+					id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 					type: "Document",
 					dateCreated: "2024-08-22T04:13:20.000Z",
 					documentId: "test-doc-id:aaa",
@@ -1194,10 +1194,10 @@ describe("document-management-service", async () => {
 						proof: {
 							type: "JwtProof",
 							value:
-								"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJ0ZXN0LWRvYy1pZDphYWE6MCIsInZjIjp7IkBjb250ZXh0IjpbImh0dHBzOi8vd3d3LnczLm9yZy9ucy9jcmVkZW50aWFscy92MiIsImh0dHBzOi8vc2NoZW1hLnR3aW5kZXYub3JnL2RvY3VtZW50cy8iLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9jb21tb24vIiwiaHR0cHM6Ly9zY2hlbWEub3JnIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJEb2N1bWVudEF0dGVzdGF0aW9uIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImRvY3VtZW50SWQiOiJ0ZXN0LWRvYy1pZDphYWEiLCJkb2N1bWVudENvZGUiOiJ1bmVjZTpEb2N1bWVudENvZGVMaXN0IzcwNSIsImRvY3VtZW50UmV2aXNpb24iOjAsImRhdGVDcmVhdGVkIjoiMjAyNC0wOC0yMlQwNDoxMzoyMC4wMDBaIiwiYmxvYkhhc2giOiJzaGEyNTY6cFpHbTFBdjBJRUJLQVJjeno3ZXhrTllzWmI4THphTXJWN0ozMmEyZkZHND0ifX19.dCinmTy1jwbQ0HB4R4KkPFnKOZ4BsblIUAVGP8DGh7f0hKcu91DWmO8_xLgwOjXZtpZq20MQe2kqfZPUzYNpCA"
+								"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJkb2N1bWVudDpyd1FVcnpfYUx0dm1ZV2pJb2xMVTFQTkhEVFhkMjRSVVZKSDE0SkRlNUs4OjAiLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9kb2N1bWVudHMvIiwiaHR0cHM6Ly9zY2hlbWEudHdpbmRldi5vcmcvY29tbW9uLyIsImh0dHBzOi8vc2NoZW1hLm9yZyJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRG9jdW1lbnRBdHRlc3RhdGlvbiJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJkYXRlQ3JlYXRlZCI6IjIwMjQtMDgtMjJUMDQ6MTM6MjAuMDAwWiIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9In19fQ.BVhqtBBobNS4D6zOj0XIRDoKiMoDNwUmmrdqRgG0LfDXN9wigGC4iM-ADNGuBTKrwHfNiYCKWD1wdBe2JLe8AQ"
 						},
 						attestationObject: {
-							id: "test-doc-id:aaa:0",
+							id: "document:rwQUrz_aLtvmYWjIolLU1PNHDTXd24RUVJH14JDe5K8:0",
 							type: "DocumentAttestation",
 							dateCreated: "2024-08-22T04:13:20.000Z",
 							documentId: "test-doc-id:aaa",
@@ -1311,6 +1311,44 @@ describe("document-management-service", async () => {
 		expect(docs.documents[5].documentRevision).toEqual(0);
 	});
 
+	test("can get a document revision from an AIG with multiple revisions", async () => {
+		const service = new DocumentManagementService();
+
+		const documentId = await service.create(
+			"test-doc-id:aaa",
+			undefined,
+			UneceDocumentCodes.BillOfLading,
+			Converter.utf8ToBytes("Hello World"),
+			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+			undefined,
+			{
+				createAttestation: false
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		for (let i = 0; i < 5; i++) {
+			await service.update(
+				documentId,
+				Converter.utf8ToBytes(`Hello World${i}`),
+				{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+				undefined,
+				TEST_USER_IDENTITY,
+				TEST_NODE_IDENTITY
+			);
+		}
+
+		const revision = await service.getRevision(
+			documentId,
+			2,
+			undefined,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		expect(revision.documentRevision).toEqual(2);
+	});
+
 	test("can remove a specific revision document from an AIG with multiple revisions", async () => {
 		const service = new DocumentManagementService();
 
@@ -1362,6 +1400,95 @@ describe("document-management-service", async () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(docWithDeleted.documents.length).toEqual(6);
+	});
+
+	test("can remove a revision an add new revisions keeping revision count incrementing", async () => {
+		const service = new DocumentManagementService();
+
+		const documentId = await service.create(
+			"test-doc-id:aaa",
+			undefined,
+			UneceDocumentCodes.BillOfLading,
+			Converter.utf8ToBytes("Hello World"),
+			{ "@context": "https://schema.org", type: "DigitalDocument", name: "bill-of-lading" },
+			undefined,
+			{
+				createAttestation: false
+			},
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		await service.update(
+			documentId,
+			Converter.utf8ToBytes("Hello World2"),
+			undefined,
+			undefined,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		const docs = await service.get(
+			documentId,
+			undefined,
+			undefined,
+			20,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		expect(docs.documents.length).toEqual(2);
+		expect(docs.documents[0].documentRevision).toEqual(1);
+		expect(docs.documents[1].documentRevision).toEqual(0);
+
+		await service.removeRevision(documentId, 1, TEST_USER_IDENTITY, TEST_NODE_IDENTITY);
+
+		const docs2 = await service.get(
+			documentId,
+			undefined,
+			undefined,
+			20,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		expect(docs2.documents.length).toEqual(1);
+		expect(docs2.documents[0].documentRevision).toEqual(0);
+
+		await service.update(
+			documentId,
+			Converter.utf8ToBytes("Hello World3"),
+			undefined,
+			undefined,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		const docs3 = await service.get(
+			documentId,
+			undefined,
+			undefined,
+			20,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+
+		expect(docs3.documents.length).toEqual(2);
+		expect(docs3.documents[0].documentRevision).toEqual(2);
+		expect(docs3.documents[1].documentRevision).toEqual(0);
+
+		const docWithDeleted = await service.get(
+			documentId,
+			{
+				includeRemoved: true
+			},
+			undefined,
+			20,
+			TEST_USER_IDENTITY,
+			TEST_NODE_IDENTITY
+		);
+		expect(docWithDeleted.documents.length).toEqual(3);
+		expect(docWithDeleted.documents[0].documentRevision).toEqual(2);
+		expect(docWithDeleted.documents[1].documentRevision).toEqual(1);
+		expect(docWithDeleted.documents[2].documentRevision).toEqual(0);
 	});
 
 	test("can query for documents from the aig", async () => {

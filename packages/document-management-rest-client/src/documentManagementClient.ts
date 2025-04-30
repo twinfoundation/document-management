@@ -10,11 +10,14 @@ import type { IAuditableItemGraphVertexList } from "@twin.org/auditable-item-gra
 import { Coerce, Converter, Guards, Is, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type {
+	IDocument,
 	IDocumentList,
 	IDocumentManagementComponent,
 	IDocumentManagementCreateRequest,
 	IDocumentManagementGetRequest,
 	IDocumentManagementGetResponse,
+	IDocumentManagementGetRevisionRequest,
+	IDocumentManagementGetRevisionResponse,
 	IDocumentManagementQueryRequest,
 	IDocumentManagementQueryResponse,
 	IDocumentManagementRemoveRequest,
@@ -195,6 +198,52 @@ export class DocumentManagementClient
 				extractMimeType: options?.extractMimeType,
 				cursor,
 				pageSize: Coerce.string(pageSize)
+			}
+		});
+
+		return response.body;
+	}
+
+	/**
+	 * Get a document revision using it's auditable item graph vertex id.
+	 * @param auditableItemGraphDocumentId The auditable item graph vertex id which contains the document.
+	 * @param revision The revision id for the document.
+	 * @param options Additional options for the get operation.
+	 * @param options.includeBlobStorageMetadata Flag to include the blob storage metadata for the document, defaults to false.
+	 * @param options.includeBlobStorageData Flag to include the blob storage data for the document, defaults to false.
+	 * @param options.includeAttestation Flag to include the attestation information for the document, defaults to false.
+	 * @param options.extractRuleGroupId If provided will extract data from the document using the specified rule group id.
+	 * @param options.extractMimeType By default extraction will auto detect the mime type of the document, this can be used to override the detection.
+	 * @returns The documents and revisions if requested, ordered by revision descending, cursor is set if there are more document revisions.
+	 */
+	public async getRevision(
+		auditableItemGraphDocumentId: string,
+		revision: number,
+		options?: {
+			includeBlobStorageMetadata?: boolean;
+			includeBlobStorageData?: boolean;
+			includeAttestation?: boolean;
+			extractRuleGroupId?: string;
+			extractMimeType?: string;
+		}
+	): Promise<IDocument> {
+		Urn.guard(this.CLASS_NAME, nameof(auditableItemGraphDocumentId), auditableItemGraphDocumentId);
+		Guards.integer(this.CLASS_NAME, nameof(revision), revision);
+
+		const response = await this.fetch<
+			IDocumentManagementGetRevisionRequest,
+			IDocumentManagementGetRevisionResponse
+		>("/:auditableItemGraphDocumentId/:revision", "GET", {
+			pathParams: {
+				auditableItemGraphDocumentId,
+				revision: revision.toString()
+			},
+			query: {
+				includeBlobStorageMetadata: options?.includeBlobStorageMetadata,
+				includeBlobStorageData: options?.includeBlobStorageData,
+				includeAttestation: options?.includeAttestation,
+				extractRuleGroupId: options?.extractRuleGroupId,
+				extractMimeType: options?.extractMimeType
 			}
 		});
 

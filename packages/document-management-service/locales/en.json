@@ -4,10 +4,11 @@
 			"createFailed": "Failed to create document",
 			"updateFailed": "Failed to update document",
 			"getFailed": "Failed to get document",
+			"getRevisionFailed": "Failed to get document revision",
 			"removeRevision": "Failed to remove document revision",
 			"queryFailed": "Failed to query document",
 			"documentRevisionNone": "There are no revisions in the document",
-			"documentRevisionNotFound": "There is no revision number \"{revision}\" in the document",
+			"documentRevisionNotFound": "There is no revision number \"{notFoundId}\" in the document",
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Document Management component \"{namespace}\""
 		}
 	}

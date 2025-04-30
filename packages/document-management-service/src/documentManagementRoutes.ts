@@ -16,6 +16,8 @@ import { Coerce, ComponentFactory, Converter, Guards, Is } from "@twin.org/core"
 import {
 	DocumentContexts,
 	DocumentTypes,
+	type IDocumentManagementGetRevisionRequest,
+	type IDocumentManagementGetRevisionResponse,
 	type IDocumentManagementComponent,
 	type IDocumentManagementCreateRequest,
 	type IDocumentManagementGetRequest,
@@ -271,7 +273,112 @@ export function generateRestRoutesDocumentManagement(
 		]
 	};
 
-	const documentManagementRemoveRoute: IRestRoute<
+	const documentManagementGetRevisionRoute: IRestRoute<
+		IDocumentManagementGetRevisionRequest,
+		IDocumentManagementGetRevisionResponse
+	> = {
+		operationId: "DocumentManagementGetRevision",
+		summary: "Get the data for a document revision from document management",
+		tag: tagsDocumentManagement[0].name,
+		method: "GET",
+		path: `${baseRouteName}/:auditableItemGraphDocumentId/:revision`,
+		handler: async (httpRequestContext, request) =>
+			documentManagementGetRevision(httpRequestContext, componentName, request),
+		requestType: {
+			type: nameof<IDocumentManagementGetRequest>(),
+			examples: [
+				{
+					id: "DocumentManagementGetRevisionRequestExample",
+					request: {
+						pathParams: {
+							auditableItemGraphDocumentId: "aig:123456",
+							revision: "1"
+						}
+					}
+				}
+			]
+		},
+		responseType: [
+			{
+				type: nameof<IDocumentManagementGetRevisionResponse>(),
+				examples: [
+					{
+						id: "DocumentManagementGetRevisionResponseExample",
+						response: {
+							body: {
+								"@context": [
+									DocumentContexts.ContextRoot,
+									DocumentContexts.ContextRootCommon,
+									SchemaOrgContexts.ContextRoot
+								],
+								type: DocumentTypes.Document,
+								id: "2721000:0",
+								documentId: "2721000",
+								documentIdFormat: "bol",
+								documentCode: UneceDocumentCodes.BillOfLading,
+								documentRevision: 1,
+								blobStorageId:
+									"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+								blobHash: "sha256:123456",
+								dateCreated: "2024-01-01T00:00:00Z",
+								annotationObject: {
+									"@context": "https://schema.org",
+									"@type": "DigitalDocument",
+									name: "myfile.pdf"
+								},
+								nodeIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+								userIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
+							}
+						}
+					}
+				]
+			},
+			{
+				type: nameof<IDocumentManagementGetRevisionResponse>(),
+				mimeType: MimeTypes.JsonLd,
+				examples: [
+					{
+						id: "DocumentManagementGetRevisionResponseExample",
+						response: {
+							body: {
+								"@context": [
+									DocumentContexts.ContextRoot,
+									DocumentContexts.ContextRootCommon,
+									SchemaOrgContexts.ContextRoot
+								],
+								type: DocumentTypes.Document,
+								id: "2721000:0",
+								documentId: "2721000",
+								documentIdFormat: "bol",
+								documentCode: UneceDocumentCodes.BillOfLading,
+								documentRevision: 1,
+								blobStorageId:
+									"blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70",
+								blobHash: "sha256:123456",
+								dateCreated: "2024-01-01T00:00:00Z",
+								annotationObject: {
+									"@context": "https://schema.org",
+									"@type": "DigitalDocument",
+									name: "myfile.pdf"
+								},
+								nodeIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363",
+								userIdentity:
+									"did:entity-storage:0x6363636363636363636363636363636363636363636363636363636363636363"
+							}
+						}
+					}
+				]
+			},
+			{
+				type: nameof<INotFoundResponse>()
+			}
+		]
+	};
+
+	const documentManagementRemoveRevisionRoute: IRestRoute<
 		IDocumentManagementRemoveRequest,
 		INoContentResponse
 	> = {
@@ -403,7 +510,8 @@ export function generateRestRoutesDocumentManagement(
 		documentManagementCreateRoute,
 		documentManagementUpdateRoute,
 		documentManagementGetRoute,
-		documentManagementRemoveRoute,
+		documentManagementGetRevisionRoute,
+		documentManagementRemoveRevisionRoute,
 		documentManagementQueryRoute
 	];
 }
@@ -487,7 +595,9 @@ export async function documentManagementGet(
 			includeBlobStorageMetadata: Coerce.boolean(request.query?.includeBlobStorageMetadata),
 			includeBlobStorageData: Coerce.boolean(request.query?.includeBlobStorageData),
 			includeAttestation: Coerce.boolean(request.query?.includeAttestation),
-			includeRemoved: Coerce.boolean(request.query?.includeRemoved)
+			includeRemoved: Coerce.boolean(request.query?.includeRemoved),
+			extractRuleGroupId: request.query?.extractRuleGroupId,
+			extractMimeType: request.query?.extractMimeType
 		},
 		request.query?.cursor,
 		Coerce.integer(request.query?.pageSize),
@@ -504,7 +614,60 @@ export async function documentManagementGet(
 }
 
 /**
- * UPdate the document from the auditable item graph vertex.
+ * Get the document revision from the auditable item graph vertex.
+ * @param httpRequestContext The request context for the API.
+ * @param componentName The name of the component to use in the routes.
+ * @param request The request.
+ * @returns The response object with additional http response properties.
+ */
+export async function documentManagementGetRevision(
+	httpRequestContext: IHttpRequestContext,
+	componentName: string,
+	request: IDocumentManagementGetRevisionRequest
+): Promise<IDocumentManagementGetRevisionResponse> {
+	Guards.object<IDocumentManagementGetRevisionRequest>(ROUTES_SOURCE, nameof(request), request);
+	Guards.object<IDocumentManagementGetRevisionRequest["pathParams"]>(
+		ROUTES_SOURCE,
+		nameof(request.pathParams),
+		request.pathParams
+	);
+	Guards.stringValue(
+		ROUTES_SOURCE,
+		nameof(request.pathParams.auditableItemGraphDocumentId),
+		request.pathParams.auditableItemGraphDocumentId
+	);
+
+	const revision = Coerce.integer(request.pathParams.revision);
+	Guards.integer(ROUTES_SOURCE, nameof(revision), revision);
+
+	const mimeType = request.headers?.[HeaderTypes.Accept] === MimeTypes.JsonLd ? "jsonld" : "json";
+
+	const component = ComponentFactory.get<IDocumentManagementComponent>(componentName);
+
+	const result = await component.getRevision(
+		request.pathParams.auditableItemGraphDocumentId,
+		revision,
+		{
+			includeBlobStorageMetadata: Coerce.boolean(request.query?.includeBlobStorageMetadata),
+			includeBlobStorageData: Coerce.boolean(request.query?.includeBlobStorageData),
+			includeAttestation: Coerce.boolean(request.query?.includeAttestation),
+			extractRuleGroupId: request.query?.extractRuleGroupId,
+			extractMimeType: request.query?.extractMimeType
+		},
+		httpRequestContext.userIdentity,
+		httpRequestContext.nodeIdentity
+	);
+
+	return {
+		headers: {
+			[HeaderTypes.ContentType]: mimeType === "json" ? MimeTypes.Json : MimeTypes.JsonLd
+		},
+		body: result
+	};
+}
+
+/**
+ * Update the document from the auditable item graph vertex.
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
