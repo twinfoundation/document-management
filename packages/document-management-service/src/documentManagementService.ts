@@ -864,6 +864,8 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			for (let i = 0; i < slicedResources.length; i++) {
 				const document = slicedResources[i].resourceObject as unknown as IDocument;
 				if (Is.object(document)) {
+					document.dateDeleted = slicedResources[i].dateDeleted;
+
 					docList.documents.push(document);
 
 					const blobRequired = includeBlobStorageMetadata || includeBlobStorageData;
