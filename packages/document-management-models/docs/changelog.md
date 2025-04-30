@@ -1,5 +1,12 @@
 # @twin.org/document-management-models - Changelog
 
+## [0.0.1-next.12](https://github.com/twinfoundation/document-management/compare/document-management-models-v0.0.1-next.11...document-management-models-v0.0.1-next.12) (2025-04-30)
+
+
+### Features
+
+* get document revision ([080eddc](https://github.com/twinfoundation/document-management/commit/080eddcc024c622dda6bb36f60f5fa80a86cf5bb))
+
 ## [0.0.1-next.11](https://github.com/twinfoundation/document-management/compare/document-management-models-v0.0.1-next.10...document-management-models-v0.0.1-next.11) (2025-04-28)
 
 
