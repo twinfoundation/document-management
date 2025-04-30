@@ -1,5 +1,19 @@
 # @twin.org/document-management-service - Changelog
 
+## [0.0.1-next.13](https://github.com/twinfoundation/document-management/compare/document-management-service-v0.0.1-next.12...document-management-service-v0.0.1-next.13) (2025-04-30)
+
+
+### Features
+
+* populate dateDeleted from aig resource object ([ce91cf1](https://github.com/twinfoundation/document-management/commit/ce91cf1385c4370ec6924435349213abf776f3e5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/document-management-models bumped from 0.0.1-next.12 to 0.0.1-next.13
+
 ## [0.0.1-next.12](https://github.com/twinfoundation/document-management/compare/document-management-service-v0.0.1-next.11...document-management-service-v0.0.1-next.12) (2025-04-30)
 
 
