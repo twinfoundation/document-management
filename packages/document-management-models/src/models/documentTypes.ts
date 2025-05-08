@@ -14,12 +14,7 @@ export const DocumentTypes = {
 	/**
 	 * Represents a document attestation.
 	 */
-	DocumentAttestation: "DocumentAttestation",
-
-	/**
-	 * Represents a document list.
-	 */
-	DocumentList: "DocumentList"
+	DocumentAttestation: "DocumentAttestation"
 } as const;
 
 /**

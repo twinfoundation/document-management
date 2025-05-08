@@ -1,7 +1,7 @@
 {
 	"baseUrl": "https://schema.twindev.org/documents/",
 	"sources": ["./src/models/**/*.ts"],
-	"types": ["IDocument", "IDocumentAttestation", "IDocumentList"],
+	"types": ["IDocument", "IDocumentAttestation"],
 	"externalReferences": {
 		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1",
 		"IAttestation(.*)": "https://schema.twindev.org/attestation/Attestation$1",

@@ -28,7 +28,7 @@ import {
 	type IDocumentManagementUpdateRequest
 } from "@twin.org/document-management-models";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgContexts } from "@twin.org/standards-schema-org";
+import { SchemaOrgContexts, SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import { UneceDocumentCodes } from "@twin.org/standards-unece";
 import { HeaderTypes, HttpStatusCode, MimeTypes } from "@twin.org/web";
 
@@ -189,9 +189,13 @@ export function generateRestRoutesDocumentManagement(
 						id: "DocumentManagementGetResponseExample",
 						response: {
 							body: {
-								"@context": [DocumentContexts.ContextRoot, DocumentContexts.ContextRootCommon],
-								type: DocumentTypes.DocumentList,
-								documents: [
+								"@context": [
+									SchemaOrgContexts.ContextRoot,
+									DocumentContexts.ContextRoot,
+									DocumentContexts.ContextRootCommon
+								],
+								type: SchemaOrgTypes.ItemList,
+								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
 											DocumentContexts.ContextRoot,
@@ -232,9 +236,13 @@ export function generateRestRoutesDocumentManagement(
 						id: "DocumentManagementGetResponseExample",
 						response: {
 							body: {
-								"@context": [DocumentContexts.ContextRoot, DocumentContexts.ContextRootCommon],
-								type: DocumentTypes.DocumentList,
-								documents: [
+								"@context": [
+									SchemaOrgContexts.ContextRoot,
+									DocumentContexts.ContextRoot,
+									DocumentContexts.ContextRootCommon
+								],
+								type: SchemaOrgTypes.ItemList,
+								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
 											DocumentContexts.ContextRoot,
@@ -445,9 +453,9 @@ export function generateRestRoutesDocumentManagement(
 						id: "DocumentManagementQueryResponseExample",
 						response: {
 							body: {
-								"@context": [AuditableItemGraphContexts.ContextRoot],
-								type: AuditableItemGraphTypes.VertexList,
-								vertices: [
+								"@context": [SchemaOrgContexts.ContextRoot, AuditableItemGraphContexts.ContextRoot],
+								type: SchemaOrgTypes.ItemList,
+								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [
 											AuditableItemGraphContexts.ContextRoot,

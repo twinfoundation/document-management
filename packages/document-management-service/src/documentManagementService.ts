@@ -37,7 +37,11 @@ import {
 	type IDocumentManagementComponent
 } from "@twin.org/document-management-models";
 import { nameof } from "@twin.org/nameof";
-import { SchemaOrgContexts, SchemaOrgDataTypes } from "@twin.org/standards-schema-org";
+import {
+	SchemaOrgContexts,
+	SchemaOrgDataTypes,
+	SchemaOrgTypes
+} from "@twin.org/standards-schema-org";
 import { UneceDocumentCodes } from "@twin.org/standards-unece";
 import type { IDocumentManagementServiceConstructorOptions } from "./models/IDocumentManagementStorageServiceConstructorOptions";
 
@@ -287,7 +291,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			}
 
 			const documents = await this.getDocumentsFromVertex(documentVertex);
-			const latestRevision: IDocument | undefined = documents.documents[0];
+			const latestRevision: IDocument | undefined = documents.itemListElement[0];
 
 			documentVertex.resources = documentVertex.resources.filter(r => Is.empty(r.dateDeleted));
 
@@ -520,7 +524,10 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				nodeIdentity
 			);
 
-			return JsonLdProcessor.compact(docList.documents[0], docList.documents[0]["@context"]);
+			return JsonLdProcessor.compact(
+				docList.itemListElement[0],
+				docList.itemListElement[0]["@context"]
+			);
 		} catch (error) {
 			if (BaseError.someErrorName(error, nameof<NotFoundError>())) {
 				throw error;
@@ -834,12 +841,12 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 	): Promise<IDocumentList> {
 		const docList: IDocumentList = {
 			"@context": [
+				SchemaOrgContexts.ContextRoot,
 				DocumentContexts.ContextRoot,
-				DocumentContexts.ContextRootCommon,
-				SchemaOrgContexts.ContextRoot
+				DocumentContexts.ContextRootCommon
 			],
-			type: DocumentTypes.DocumentList,
-			documents: []
+			type: SchemaOrgTypes.ItemList,
+			[SchemaOrgTypes.ItemListElement]: []
 		};
 
 		if (Is.arrayValue(documentVertex.resources)) {
@@ -853,7 +860,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 			const startIndex = Coerce.integer(cursor) ?? 0;
 			const endIndex = Math.min(startIndex + (pageSize ?? 1), documentVertex.resources.length);
 			const slicedResources = documentVertex.resources.slice(startIndex, endIndex);
-			docList.cursor =
+			docList[SchemaOrgTypes.NextItem] =
 				documentVertex.resources.length > endIndex ? (endIndex + 1).toString() : undefined;
 
 			const includeBlobStorageMetadata = options?.includeBlobStorageMetadata ?? false;
@@ -866,7 +873,7 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 				if (Is.object(document)) {
 					document.dateDeleted = slicedResources[i].dateDeleted;
 
-					docList.documents.push(document);
+					docList[SchemaOrgTypes.ItemListElement].push(document);
 
 					const blobRequired = includeBlobStorageMetadata || includeBlobStorageData;
 					if (blobRequired || extractData) {

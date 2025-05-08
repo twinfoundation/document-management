@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IJsonLdContextDefinitionElement } from "@twin.org/data-json-ld";
+import type { SchemaOrgContexts, SchemaOrgTypes } from "@twin.org/standards-schema-org";
 import type { DocumentContexts } from "./documentContexts";
-import type { DocumentTypes } from "./documentTypes";
 import type { IDocument } from "./IDocument";
 
 /**
@@ -13,6 +13,7 @@ export interface IDocumentList {
 	 * JSON-LD Context.
 	 */
 	"@context": [
+		typeof SchemaOrgContexts.ContextRoot,
 		typeof DocumentContexts.ContextRoot,
 		typeof DocumentContexts.ContextRootCommon,
 		...IJsonLdContextDefinitionElement[]
@@ -21,12 +22,12 @@ export interface IDocumentList {
 	/**
 	 * JSON-LD Type.
 	 */
-	type: typeof DocumentTypes.DocumentList;
+	type: typeof SchemaOrgTypes.ItemList;
 
 	/**
 	 * The list of documents.
 	 */
-	documents: IDocument[];
+	[SchemaOrgTypes.ItemListElement]: IDocument[];
 
 	/**
 	 * The ids of the other vertices which are connected to the document.
@@ -36,5 +37,5 @@ export interface IDocumentList {
 	/**
 	 * The cursor to get the next chunk of documents.
 	 */
-	cursor?: string;
+	[SchemaOrgTypes.NextItem]?: string;
 }
