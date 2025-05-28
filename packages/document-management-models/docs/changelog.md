@@ -1,5 +1,12 @@
 # @twin.org/document-management-models - Changelog
 
+## [0.0.1-next.15](https://github.com/twinfoundation/document-management/compare/document-management-models-v0.0.1-next.14...document-management-models-v0.0.1-next.15) (2025-05-28)
+
+
+### Features
+
+* data type registration use fully qualified names ([18d27d0](https://github.com/twinfoundation/document-management/commit/18d27d0c21d0f652b7df4b409bb2d3c66cf22f84))
+
 ## [0.0.1-next.14](https://github.com/twinfoundation/document-management/compare/document-management-models-v0.0.1-next.13...document-management-models-v0.0.1-next.14) (2025-05-08)
 
 
