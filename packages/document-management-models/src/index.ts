@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+export * from "./dataTypes/documentManagementDataTypes";
 export * from "./models/api/IDocumentManagementCreateRequest";
 export * from "./models/api/IDocumentManagementGetRequest";
 export * from "./models/api/IDocumentManagementGetResponse";
