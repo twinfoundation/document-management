@@ -14,7 +14,7 @@
 		"node": ">=20.0.0"
 	},
 	"scripts": {
-		"clean": "rimraf dist coverage docs/reference",
+		"clean": "rimraf dist coverage docs/reference src/schemas",
 		"build:schema": "ts-to-schema ./ts-to-schema.json ./src/schemas",
 		"build:compile": "tsc",
 		"build": "npm run build:schema && npm run build:compile",
