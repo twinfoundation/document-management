@@ -454,7 +454,7 @@ export function generateRestRoutesDocumentManagement(
 						response: {
 							body: {
 								"@context": [SchemaOrgContexts.ContextRoot, AuditableItemGraphContexts.ContextRoot],
-								type: SchemaOrgTypes.ItemList,
+								type: [SchemaOrgTypes.ItemList, AuditableItemGraphTypes.VertexList],
 								[SchemaOrgTypes.ItemListElement]: [
 									{
 										"@context": [

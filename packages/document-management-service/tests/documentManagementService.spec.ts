@@ -232,6 +232,7 @@ describe("document-management-service", async () => {
 				encodingFormat: "text/plain",
 				fileExtension: "txt",
 				id: "blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
+				isEncrypted: false,
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				userIdentity:
@@ -347,6 +348,7 @@ describe("document-management-service", async () => {
 				encodingFormat: "text/plain",
 				fileExtension: "txt",
 				id: "blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
+				isEncrypted: false,
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				userIdentity:

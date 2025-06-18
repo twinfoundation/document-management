@@ -879,7 +879,9 @@ export class DocumentManagementService implements IDocumentManagementComponent {
 					if (blobRequired || extractData) {
 						const blobEntry = await this._blobStorageComponent.get(
 							document.blobStorageId,
-							includeBlobStorageData || extractData,
+							{
+								includeContent: includeBlobStorageData || extractData
+							},
 							userIdentity,
 							nodeIdentity
 						);
