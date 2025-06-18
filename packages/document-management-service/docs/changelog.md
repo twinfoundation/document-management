@@ -1,5 +1,19 @@
 # @twin.org/document-management-service - Changelog
 
+## [0.0.1-next.18](https://github.com/twinfoundation/document-management/compare/document-management-service-v0.0.1-next.17...document-management-service-v0.0.1-next.18) (2025-06-18)
+
+
+### Features
+
+* update blob storage component ([63fe802](https://github.com/twinfoundation/document-management/commit/63fe8023bdae76631e324e6fee753c7e9243acfe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/document-management-models bumped from 0.0.1-next.17 to 0.0.1-next.18
+
 ## [0.0.1-next.17](https://github.com/twinfoundation/document-management/compare/document-management-service-v0.0.1-next.16...document-management-service-v0.0.1-next.17) (2025-06-12)
 
 
