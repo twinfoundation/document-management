@@ -1052,7 +1052,8 @@ describe("document-management-service", async () => {
 						blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						encodingFormat: "text/plain",
-						fileExtension: "txt"
+						fileExtension: "txt",
+						isEncrypted: false
 					}
 				}
 			]
@@ -1124,7 +1125,8 @@ describe("document-management-service", async () => {
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						encodingFormat: "text/plain",
 						fileExtension: "txt",
-						blob: "SGVsbG8gV29ybGQ="
+						blob: "SGVsbG8gV29ybGQ=",
+						isEncrypted: false
 					}
 				}
 			]
@@ -1217,7 +1219,8 @@ describe("document-management-service", async () => {
 						encodingFormat: "text/plain",
 						blobSize: 11,
 						fileExtension: "txt",
-						blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4="
+						blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
+						isEncrypted: false
 					},
 					blobStorageId:
 						"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
