@@ -1,5 +1,19 @@
 # @twin.org/document-management-service - Changelog
 
+## [0.0.1-next.19](https://github.com/twinfoundation/document-management/compare/document-management-service-v0.0.1-next.18...document-management-service-v0.0.1-next.19) (2025-06-20)
+
+
+### Bug Fixes
+
+* query params force coercion ([d667d0f](https://github.com/twinfoundation/document-management/commit/d667d0f195accca2887a5ca732e9790063763996))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/document-management-models bumped from 0.0.1-next.18 to 0.0.1-next.19
+
 ## [0.0.1-next.18](https://github.com/twinfoundation/document-management/compare/document-management-service-v0.0.1-next.17...document-management-service-v0.0.1-next.18) (2025-06-18)
 
 
