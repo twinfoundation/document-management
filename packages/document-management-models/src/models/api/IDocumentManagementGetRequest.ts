@@ -31,25 +31,25 @@ export interface IDocumentManagementGetRequest {
 		 * Include the blob storage metadata in the response.
 		 * @default false
 		 */
-		includeBlobStorageMetadata?: boolean;
+		includeBlobStorageMetadata?: boolean | string;
 
 		/**
 		 * Include the blob storage data in the response.
 		 * @default false
 		 */
-		includeBlobStorageData?: boolean;
+		includeBlobStorageData?: boolean | string;
 
 		/**
 		 * Include the attestation information in the response.
 		 * @default false
 		 */
-		includeAttestation?: boolean;
+		includeAttestation?: boolean | string;
 
 		/**
 		 * Include deleted documents in the response.
 		 * @default false
 		 */
-		includeRemoved?: boolean;
+		includeRemoved?: boolean | string;
 
 		/**
 		 * If provided will extract data from the document using the specified rule group id.
@@ -65,7 +65,7 @@ export interface IDocumentManagementGetRequest {
 		 * Page size of items to return, defaults to 1 so only most recent is returned.
 		 * @default 1
 		 */
-		pageSize?: string;
+		pageSize?: number | string;
 
 		/**
 		 * The cursor to get the next chunk of revisions.

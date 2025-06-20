@@ -30,6 +30,6 @@ export interface IDocumentManagementQueryRequest {
 		/**
 		 * The number of documents to return.
 		 */
-		pageSize?: string;
+		pageSize?: number | string;
 	};
 }
