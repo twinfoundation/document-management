@@ -318,13 +318,13 @@ describe("document-management-service", async () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(documentId).toEqual(
-			"aig:1515151515151515151515151515151515151515151515151515151515151515"
+			"aig:1212121212121212121212121212121212121212121212121212121212121212"
 		);
 
 		const nftStore = nftEntityStorage.getStore();
 		expect(nftStore).toEqual([
 			{
-				id: "1414141414141414141414141414141414141414141414141414141414141414",
+				id: "1111111111111111111111111111111111111111111111111111111111111111",
 				immutableMetadata: {
 					proof:
 						"eyJraWQiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxI2F0dGVzdGF0aW9uLWFzc2VydGlvbiIsInR5cCI6IkpXVCIsImFsZyI6IkVkRFNBIn0.eyJpc3MiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxMDEwMTAxIiwibmJmIjoxNzI0MzAwMDAwLCJzdWIiOiJkb2N1bWVudDpyd1FVcnpfYUx0dm1ZV2pJb2xMVTFQTkhEVFhkMjRSVVZKSDE0SkRlNUs4OjAiLCJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL3NjaGVtYS50d2luZGV2Lm9yZy9kb2N1bWVudHMvIiwiaHR0cHM6Ly9zY2hlbWEudHdpbmRldi5vcmcvY29tbW9uLyIsImh0dHBzOi8vc2NoZW1hLm9yZyJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiRG9jdW1lbnRBdHRlc3RhdGlvbiJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJkb2N1bWVudElkIjoidGVzdC1kb2MtaWQ6YWFhIiwiZG9jdW1lbnRDb2RlIjoidW5lY2U6RG9jdW1lbnRDb2RlTGlzdCM3MDUiLCJkb2N1bWVudFJldmlzaW9uIjowLCJkYXRlQ3JlYXRlZCI6IjIwMjQtMDgtMjJUMDQ6MTM6MjAuMDAwWiIsImJsb2JIYXNoIjoic2hhMjU2OnBaR20xQXYwSUVCS0FSY3p6N2V4a05Zc1piOEx6YU1yVjdKMzJhMmZGRzQ9In19fQ.BVhqtBBobNS4D6zOj0XIRDoKiMoDNwUmmrdqRgG0LfDXN9wigGC4iM-ADNGuBTKrwHfNiYCKWD1wdBe2JLe8AQ",
@@ -359,7 +359,7 @@ describe("document-management-service", async () => {
 		const aigStore = vertexEntityStorage.getStore();
 		expect(aigStore).toEqual([
 			{
-				id: "0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
+				id: "0909090909090909090909090909090909090909090909090909090909090909",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -378,7 +378,7 @@ describe("document-management-service", async () => {
 				],
 				edges: [
 					{
-						id: "aig:1515151515151515151515151515151515151515151515151515151515151515",
+						id: "aig:1212121212121212121212121212121212121212121212121212121212121212",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
@@ -386,21 +386,21 @@ describe("document-management-service", async () => {
 				aliasIndex: "test-doc-id:aaa"
 			},
 			{
-				id: "0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f",
+				id: "0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
 				dateModified: "2024-08-22T04:13:20.000Z",
 				edges: [
 					{
-						id: "aig:1515151515151515151515151515151515151515151515151515151515151515",
+						id: "aig:1212121212121212121212121212121212121212121212121212121212121212",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
 				]
 			},
 			{
-				id: "1515151515151515151515151515151515151515151515151515151515151515",
+				id: "1212121212121212121212121212121212121212121212121212121212121212",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -437,18 +437,18 @@ describe("document-management-service", async () => {
 							userIdentity:
 								"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404",
 							attestationId:
-								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQ="
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE="
 						}
 					}
 				],
 				edges: [
 					{
-						id: "aig:0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
+						id: "aig:0909090909090909090909090909090909090909090909090909090909090909",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					},
 					{
-						id: "aig:0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f",
+						id: "aig:0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
@@ -500,7 +500,7 @@ describe("document-management-service", async () => {
 		const aigStore = vertexEntityStorage.getStore();
 		expect(aigStore).toEqual([
 			{
-				id: "2323232323232323232323232323232323232323232323232323232323232323",
+				id: "1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -544,7 +544,7 @@ describe("document-management-service", async () => {
 							userIdentity:
 								"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404",
 							attestationId:
-								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI=",
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWM=",
 							dateModified: "2024-08-22T04:13:20.000Z"
 						},
 						dateModified: "2024-08-22T04:13:20.000Z"
@@ -641,7 +641,7 @@ describe("document-management-service", async () => {
 		const aigStore = vertexEntityStorage.getStore();
 		expect(aigStore).toEqual([
 			{
-				id: "3737373737373737373737373737373737373737373737373737373737373737",
+				id: "2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -659,7 +659,7 @@ describe("document-management-service", async () => {
 				],
 				edges: [
 					{
-						id: "aig:4242424242424242424242424242424242424242424242424242424242424242",
+						id: "aig:3636363636363636363636363636363636363636363636363636363636363636",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
@@ -668,7 +668,7 @@ describe("document-management-service", async () => {
 				aliasIndex: "test-doc-id:aaa"
 			},
 			{
-				id: "3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+				id: "3131313131313131313131313131313131313131313131313131313131313131",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -684,28 +684,23 @@ describe("document-management-service", async () => {
 						}
 					}
 				],
-				aliasIndex: "test-doc-id:aaa",
 				edges: [
 					{
-						id: "aig:4242424242424242424242424242424242424242424242424242424242424242",
+						id: "aig:3636363636363636363636363636363636363636363636363636363636363636",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
 				],
-				dateModified: "2024-08-22T04:13:20.000Z"
+				dateModified: "2024-08-22T04:13:20.000Z",
+				aliasIndex: "test-doc-id:aaa"
 			},
 			{
-				id: "4242424242424242424242424242424242424242424242424242424242424242",
+				id: "3636363636363636363636363636363636363636363636363636363636363636",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
-				resourceTypeIndex: "document",
 				aliases: [
-					{
-						id: "test-doc-id:aaa",
-						aliasFormat: "foo",
-						dateCreated: "2024-08-22T04:13:20.000Z"
-					}
+					{ id: "test-doc-id:aaa", aliasFormat: "foo", dateCreated: "2024-08-22T04:13:20.000Z" }
 				],
 				resources: [
 					{
@@ -736,23 +731,24 @@ describe("document-management-service", async () => {
 							userIdentity:
 								"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404",
 							attestationId:
-								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE="
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzU="
 						}
 					}
 				],
 				edges: [
 					{
-						id: "aig:3737373737373737373737373737373737373737373737373737373737373737",
+						id: "aig:2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					},
 					{
-						id: "aig:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+						id: "aig:3131313131313131313131313131313131313131313131313131313131313131",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
 				],
-				aliasIndex: "test-doc-id:aaa"
+				aliasIndex: "test-doc-id:aaa",
+				resourceTypeIndex: "document"
 			}
 		]);
 
@@ -784,7 +780,7 @@ describe("document-management-service", async () => {
 		const aigStore2 = vertexEntityStorage.getStore();
 		expect(aigStore2).toEqual([
 			{
-				id: "3737373737373737373737373737373737373737373737373737373737373737",
+				id: "2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -802,7 +798,7 @@ describe("document-management-service", async () => {
 				],
 				edges: [
 					{
-						id: "aig:4242424242424242424242424242424242424242424242424242424242424242",
+						id: "aig:3636363636363636363636363636363636363636363636363636363636363636",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
@@ -811,7 +807,7 @@ describe("document-management-service", async () => {
 				aliasIndex: "test-doc-id:aaa"
 			},
 			{
-				id: "3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+				id: "3131313131313131313131313131313131313131313131313131313131313131",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
@@ -820,36 +816,31 @@ describe("document-management-service", async () => {
 						id: "test-doc-id:aaa",
 						aliasFormat: "foo",
 						dateCreated: "2024-08-22T04:13:20.000Z",
-						dateDeleted: "2024-08-22T04:13:20.000Z",
 						annotationObject: {
 							"@context": "https://schema.org",
 							type: "Thing",
 							description: "an alias 2"
-						}
+						},
+						dateDeleted: "2024-08-22T04:13:20.000Z"
 					}
 				],
 				edges: [
 					{
-						id: "aig:4242424242424242424242424242424242424242424242424242424242424242",
+						id: "aig:3636363636363636363636363636363636363636363636363636363636363636",
 						dateCreated: "2024-08-22T04:13:20.000Z",
-						dateDeleted: "2024-08-22T04:13:20.000Z",
-						edgeRelationships: ["document"]
+						edgeRelationships: ["document"],
+						dateDeleted: "2024-08-22T04:13:20.000Z"
 					}
 				],
 				dateModified: "2024-08-22T04:13:20.000Z"
 			},
 			{
-				id: "4242424242424242424242424242424242424242424242424242424242424242",
+				id: "3636363636363636363636363636363636363636363636363636363636363636",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
-				resourceTypeIndex: "document",
 				aliases: [
-					{
-						id: "test-doc-id:aaa",
-						aliasFormat: "foo",
-						dateCreated: "2024-08-22T04:13:20.000Z"
-					}
+					{ id: "test-doc-id:aaa", aliasFormat: "foo", dateCreated: "2024-08-22T04:13:20.000Z" }
 				],
 				resources: [
 					{
@@ -875,7 +866,7 @@ describe("document-management-service", async () => {
 							userIdentity:
 								"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404",
 							attestationId:
-								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE0MTQxNDE=",
+								"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzUzNTM1MzU=",
 							dateModified: "2024-08-22T04:13:20.000Z"
 						},
 						dateModified: "2024-08-22T04:13:20.000Z"
@@ -883,40 +874,37 @@ describe("document-management-service", async () => {
 				],
 				edges: [
 					{
-						id: "aig:3737373737373737373737373737373737373737373737373737373737373737",
+						id: "aig:2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					},
 					{
-						id: "aig:3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+						id: "aig:3131313131313131313131313131313131313131313131313131313131313131",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"],
 						dateDeleted: "2024-08-22T04:13:20.000Z"
 					},
 					{
-						id: "aig:4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f",
+						id: "aig:4040404040404040404040404040404040404040404040404040404040404040",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
 				],
+				resourceTypeIndex: "document",
 				dateModified: "2024-08-22T04:13:20.000Z",
 				aliasIndex: "test-doc-id:aaa"
 			},
 			{
-				id: "4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f",
+				id: "4040404040404040404040404040404040404040404040404040404040404040",
 				nodeIdentity:
 					"did:entity-storage:0x0101010101010101010101010101010101010101010101010101010101010101",
 				dateCreated: "2024-08-22T04:13:20.000Z",
 				aliases: [
-					{
-						id: "test-doc-id:aaa",
-						aliasFormat: "foo",
-						dateCreated: "2024-08-22T04:13:20.000Z"
-					}
+					{ id: "test-doc-id:aaa", aliasFormat: "foo", dateCreated: "2024-08-22T04:13:20.000Z" }
 				],
 				edges: [
 					{
-						id: "aig:4242424242424242424242424242424242424242424242424242424242424242",
+						id: "aig:3636363636363636363636363636363636363636363636363636363636363636",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						edgeRelationships: ["document"]
 					}
@@ -943,7 +931,7 @@ describe("document-management-service", async () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(documentId).toEqual(
-			"aig:6161616161616161616161616161616161616161616161616161616161616161"
+			"aig:4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e"
 		);
 
 		const docs = await service.get(
@@ -978,7 +966,7 @@ describe("document-management-service", async () => {
 					userIdentity:
 						"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404",
 					attestationId:
-						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA=",
+						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ0ZDRkNGQ=",
 					blobStorageId:
 						"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
 					documentCode: "unece:DocumentCodeList#705",
@@ -1004,7 +992,7 @@ describe("document-management-service", async () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(documentId).toEqual(
-			"aig:6767676767676767676767676767676767676767676767676767676767676767"
+			"aig:5353535353535353535353535353535353535353535353535353535353535353"
 		);
 
 		const docs = await service.get(
@@ -1034,7 +1022,7 @@ describe("document-management-service", async () => {
 						name: "bill-of-lading"
 					},
 					attestationId:
-						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY=",
+						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI1MjUyNTI=",
 					blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
 					blobStorageId:
 						"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
@@ -1076,7 +1064,7 @@ describe("document-management-service", async () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(documentId).toEqual(
-			"aig:6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d6d"
+			"aig:5858585858585858585858585858585858585858585858585858585858585858"
 		);
 
 		const doc = await service.get(
@@ -1106,7 +1094,7 @@ describe("document-management-service", async () => {
 						name: "bill-of-lading"
 					},
 					attestationId:
-						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM2YzZjNmM=",
+						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc1NzU3NTc=",
 					blobHash: "sha256:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=",
 					blobStorageId:
 						"blob:memory:a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
@@ -1149,7 +1137,7 @@ describe("document-management-service", async () => {
 			TEST_NODE_IDENTITY
 		);
 		expect(documentId).toEqual(
-			"aig:7373737373737373737373737373737373737373737373737373737373737373"
+			"aig:5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d"
 		);
 
 		const docs = await service.get(
@@ -1186,9 +1174,9 @@ describe("document-management-service", async () => {
 					userIdentity:
 						"did:entity-storage:0x0404040404040404040404040404040404040404040404040404040404040404",
 					attestationId:
-						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI=",
+						"attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM=",
 					attestationInformation: {
-						id: "attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI3MjcyNzI=",
+						id: "attestation:nft:bmZ0OmVudGl0eS1zdG9yYWdlOjVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM1YzVjNWM=",
 						type: "Information",
 						dateCreated: "2024-08-22T04:13:20.000Z",
 						holderIdentity:
@@ -1260,7 +1248,7 @@ describe("document-management-service", async () => {
 		}
 
 		const docs = await service.get(
-			"aig:7878787878787878787878787878787878787878787878787878787878787878",
+			"aig:6161616161616161616161616161616161616161616161616161616161616161",
 			undefined,
 			undefined,
 			undefined,
